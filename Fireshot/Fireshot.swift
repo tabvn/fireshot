@@ -14,6 +14,7 @@ class Fireshot {
     
     private var tempDir: String!
     private var currentUser: User?
+    private var menuButton: NSButton!
     
     
     init(){
@@ -52,7 +53,7 @@ class Fireshot {
         }
         
     }
-    func screenCapture(){
+    func screenCapture(complete: @escaping (_ url: String?, _ error: Error?)->Void){
         
         // Implement screen capture use /usr/sbin/screencapture
         
@@ -90,23 +91,29 @@ class Fireshot {
             
             metaData.contentType = "image/png"
             
+            do{
+                try file.removeItem(atPath: destination)
+            }
+            catch{
+                print("An error delete file", destination)
+            }
+            
+            let cloudImage = NSImage(named: NSImage.Name("cloud_upload"))
+            self.menuButton.image = cloudImage
+            
             ref.child(filename).putData(fileData, metadata: metaData, completion: { (storeMetaData, error) in
                 
                 // delete file
                 
-                do{
-                    try file.removeItem(atPath: destination)
-                }
-                catch{
-                    print("An error delete file", destination)
-                }
-                
+                self.menuButton.image = NSImage(named: NSImage.Name("cloud"))
                 
                 if let error = error{
                     
                     print("An error saving shot to storage", error)
-                    return
+                    return complete(nil, error) // Callback function
+                    
                 }
+                
                 
                 
                 if let downloadUrl: String = storeMetaData?.downloadURL()?.absoluteString{
@@ -128,7 +135,9 @@ class Fireshot {
                     }
                     
                     
+                    return complete(downloadUrl, nil)
                 }
+                
                 
             })
             
@@ -162,6 +171,10 @@ class Fireshot {
         notification.contentImage = NSImage(data: image)
         NSUserNotificationCenter.default.deliver(notification)
         
+    }
+    func setMenuButton(button: NSButton){
+        
+        self.menuButton = button
     }
     
     

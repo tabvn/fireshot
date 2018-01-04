@@ -14,6 +14,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
 
 
     let statusBar = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
+    var button: NSButton!
     var fs: Fireshot!
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
@@ -22,15 +23,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
         
         FirebaseApp.configure()
         fs = Fireshot()
+        
         fs.auth()
         
+        button = statusBar.button
+        let cloudImage = NSImage(named: NSImage.Name("cloud"))
+        button.image = cloudImage
         
-        if let button = statusBar.button {
-            
-            let cloudImage = NSImage(named: NSImage.Name("cloud"))
-            button.image = cloudImage
-        }
-        
+        fs.setMenuButton(button: button)
         self.createMenu()
     }
 
@@ -57,7 +57,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
     }
     @objc func screenCapture(){
         
-       fs.screenCapture()
+        
+    
+        fs.screenCapture { (url, error) in
+            
+            //Implement later
+        }
     }
     
     func applicationWillTerminate(_ aNotification: Notification) {
