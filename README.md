@@ -30,3 +30,7 @@ open Fireshot.xcworkspace
 com.apple.security.temporary-exception.mach-register.global-name
 com.apple.screencapture.interactive
 ```
+
+## Video
+
+https://www.youtube.com/watch?v=ULagU2U8mJQ
