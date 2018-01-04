@@ -114,9 +114,9 @@
 				A02A378AD494326BAA62096E /* [CP] Check Pods Manifest.lock */,
 				544430711FFE11EC0072BDF7 /* Sources */,
 				544430721FFE11EC0072BDF7 /* Frameworks */,
-				544430731FFE11EC0072BDF7 /* Resources */,
 				85C0D251CA188D1A62ABCCAC /* [CP] Embed Pods Frameworks */,
 				EEAC0F86CE30C3BD5155F5CD /* [CP] Copy Pods Resources */,
+				544430731FFE11EC0072BDF7 /* Resources */,
 			);
 			buildRules = (
 			);
