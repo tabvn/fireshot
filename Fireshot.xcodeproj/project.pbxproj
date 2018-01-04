@@ -12,7 +12,6 @@
 		5444307D1FFE11EC0072BDF7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5444307C1FFE11EC0072BDF7 /* Assets.xcassets */; };
 		544430801FFE11EC0072BDF7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5444307E1FFE11EC0072BDF7 /* Main.storyboard */; };
 		5444308B1FFE13F50072BDF7 /* Fireshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5444308A1FFE13F50072BDF7 /* Fireshot.swift */; };
-		54F0C9451FFE17D500903D77 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 54F0C9441FFE17D500903D77 /* GoogleService-Info.plist */; };
 		54F0C9481FFE199600903D77 /* Shot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54F0C9471FFE199600903D77 /* Shot.swift */; };
 		7ADB58EE64F59C3E776FFF06 /* Pods_Fireshot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D06FACEB83A8E4A86587D66F /* Pods_Fireshot.framework */; };
 /* End PBXBuildFile section */
@@ -27,7 +26,6 @@
 		544430811FFE11EC0072BDF7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		544430821FFE11EC0072BDF7 /* Fireshot.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Fireshot.entitlements; sourceTree = "<group>"; };
 		5444308A1FFE13F50072BDF7 /* Fireshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fireshot.swift; sourceTree = "<group>"; };
-		54F0C9441FFE17D500903D77 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		54F0C9471FFE199600903D77 /* Shot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shot.swift; sourceTree = "<group>"; };
 		D06FACEB83A8E4A86587D66F /* Pods_Fireshot.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Fireshot.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F353F1C0F0F7E5512501F8D4 /* Pods-Fireshot.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Fireshot.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Fireshot/Pods-Fireshot.debug.xcconfig"; sourceTree = "<group>"; };
@@ -76,7 +74,6 @@
 			isa = PBXGroup;
 			children = (
 				54F0C9461FFE198700903D77 /* model */,
-				54F0C9441FFE17D500903D77 /* GoogleService-Info.plist */,
 				544430781FFE11EC0072BDF7 /* AppDelegate.swift */,
 				5444308A1FFE13F50072BDF7 /* Fireshot.swift */,
 				5444307A1FFE11EC0072BDF7 /* ViewController.swift */,
@@ -176,7 +173,6 @@
 			files = (
 				5444307D1FFE11EC0072BDF7 /* Assets.xcassets in Resources */,
 				544430801FFE11EC0072BDF7 /* Main.storyboard in Resources */,
-				54F0C9451FFE17D500903D77 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

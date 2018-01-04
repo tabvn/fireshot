@@ -1,4 +1,4 @@
-# Fireshot Share screenshot to Firebase & Firebase Storage
+# Fireshot OSX App Share screenshot to Firebase & Firebase Storage
 
 ## Install CocoaPods
 
