@@ -40,15 +40,21 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
         let menu = NSMenu()
         
         let screenCaptureItem = NSMenuItem(title: "Capture Screen", action: #selector(self.screenCapture), keyEquivalent: "6")
+        let exitAppItem = NSMenuItem(title: "Quit Fireshot", action: #selector(self.exitApp), keyEquivalent: "")
         screenCaptureItem.allowsKeyEquivalentWhenHidden = true
         screenCaptureItem.keyEquivalentModifierMask = [.command, .shift]
         
         menu.addItem(screenCaptureItem)
+        menu.addItem(exitAppItem)
         
         statusBar.menu = menu
         
     }
     
+    @objc func exitApp(){
+        
+        NSApplication.shared.terminate(self)
+    }
     @objc func screenCapture(){
         
        fs.screenCapture()

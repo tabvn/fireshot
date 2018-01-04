@@ -65,7 +65,14 @@ class Fireshot {
         let destination = self.tempDir + filename
         
         task.launchPath = "/usr/sbin/screencapture"
-        task.arguments = ["-i", "-r", destination]
+        
+        var arguments = ["-x","-i", "-r"]
+        
+        arguments.append(destination)
+        task.arguments = arguments
+        
+    
+        
         task.launch()
         task.waitUntilExit()
         
@@ -104,21 +111,16 @@ class Fireshot {
                 
                 if let downloadUrl: String = storeMetaData?.downloadURL()?.absoluteString{
                     
+                    // show notification to user
+                     self.showNotification(title: "Screenshot saved", text: "Screenshot has been copied to your clipboard.", image: fileData)
+                    
                     // copy to clipboard
                     
                     let pasteClipBoard = NSPasteboard.general
                     
                     pasteClipBoard.clearContents()
                     pasteClipBoard.setString(downloadUrl, forType: NSPasteboard.PasteboardType.string)
-                    
-                    
-                    
-                    // this mean upload successful
-                    
-                    // show notification to user
-                    
-                    self.showNotification(title: "Screenshot saved", text: "Screenshot has been copied to your clipboard.", image: fileData)
-                    
+                
                     if let userId = self.getCurrentUserId(){
                         
                         let shot = Shot(file: filename, url: downloadUrl, uid: userId)
@@ -153,13 +155,11 @@ class Fireshot {
     func showNotification(title: String, text: String, image: Data) -> Void {
         
         let notification = NSUserNotification()
-        
-        // All these values are optional
+    
         notification.title = "Fireshot"
         notification.informativeText = text
         notification.soundName = NSUserNotificationDefaultSoundName
         notification.contentImage = NSImage(data: image)
-        
         NSUserNotificationCenter.default.deliver(notification)
         
     }
