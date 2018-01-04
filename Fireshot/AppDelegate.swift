@@ -10,7 +10,7 @@ import Cocoa
 import FirebaseCore
 
 @NSApplicationMain
-class AppDelegate: NSObject, NSApplicationDelegate {
+class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDelegate {
 
 
     let statusBar = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
@@ -39,7 +39,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         let menu = NSMenu()
         
-        let screenCaptureItem = NSMenuItem(title: "Capture Screen", action: #selector(self.screenCapture), keyEquivalent: "s")
+        let screenCaptureItem = NSMenuItem(title: "Capture Screen", action: #selector(self.screenCapture), keyEquivalent: "6")
+        screenCaptureItem.allowsKeyEquivalentWhenHidden = true
+        screenCaptureItem.keyEquivalentModifierMask = [.command, .shift]
         
         menu.addItem(screenCaptureItem)
         

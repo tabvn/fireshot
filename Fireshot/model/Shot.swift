@@ -39,13 +39,14 @@ class Shot{
             "timestamp": self.timestamp
         ]
         
-        print("Saving to our firebase database", shot)
-        
        // save to firebase db
         
         self.ref.child(self.id).setValue(shot) { (error, databaseRef) in
+           
+            if let error = error{
+                print("Debug: saving the shot with error ", error )
+            }
             
-            print("Debug: saving the shot with error ", error )
         }
     }
 }

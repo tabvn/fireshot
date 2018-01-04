@@ -69,9 +69,6 @@ class Fireshot {
         task.launch()
         task.waitUntilExit()
         
-        print("Your screen image has been saved at ", destination)
-        
-        
         let file = FileManager()
         
         if file.fileExists(atPath: destination){
@@ -87,6 +84,16 @@ class Fireshot {
             metaData.contentType = "image/png"
             
             ref.child(filename).putData(fileData, metadata: metaData, completion: { (storeMetaData, error) in
+                
+                // delete file
+                
+                do{
+                    try file.removeItem(atPath: destination)
+                }
+                catch{
+                    print("An error delete file", destination)
+                }
+                
                 
                 if let error = error{
                     
@@ -105,7 +112,12 @@ class Fireshot {
                     pasteClipBoard.setString(downloadUrl, forType: NSPasteboard.PasteboardType.string)
                     
                     
+                    
                     // this mean upload successful
+                    
+                    // show notification to user
+                    
+                    self.showNotification(title: "Screenshot saved", text: "Screenshot has been copied to your clipboard.", image: fileData)
                     
                     if let userId = self.getCurrentUserId(){
                         
@@ -135,6 +147,20 @@ class Fireshot {
         
         return Auth.auth().currentUser?.uid
         
+        
+    }
+    
+    func showNotification(title: String, text: String, image: Data) -> Void {
+        
+        let notification = NSUserNotification()
+        
+        // All these values are optional
+        notification.title = "Fireshot"
+        notification.informativeText = text
+        notification.soundName = NSUserNotificationDefaultSoundName
+        notification.contentImage = NSImage(data: image)
+        
+        NSUserNotificationCenter.default.deliver(notification)
         
     }
     
