@@ -1,0 +1,63 @@
+Example/Auth/Sample/Sample.entitlements
+Example/Auth/Sample/GoogleService-Info_multi.plist
+Example/Auth/Sample/AuthCredentials.h
+Example/Auth/Sample/GoogleService-Info.plist
+Example/Auth/Sample/Application.plist
+Example/Auth/SwiftSample/GoogleService-Info.plist
+Example/Auth/SwiftSample/Info.plist
+Example/Auth/SwiftSample/AuthCredentials.swift
+Example/Auth/ApiTests/AuthCredentials.h
+
+Example/Database/App/GoogleService-Info.plist
+
+Example/Storage/App/GoogleService-Info.plist
+
+# OS X
+.DS_Store
+
+# Xcode
+build/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata/
+*.xccheckout
+profile
+*.moved-aside
+DerivedData
+*.hmap
+*.ipa
+
+# IntelliJ
+.idea
+
+# Vim
+*.swo
+*.swp
+
+# Bundler
+.bundle
+
+Carthage
+# Cocoapods recommends against adding the Pods directory to your .gitignore. See
+# http://guides.cocoapods.org/using/using-cocoapods.html#should-i-ignore-the-pods-directory-in-source-control
+
+# Since Firebase is building libraries, not apps, we should not check in Pods.
+# Pods are only used in the Examples and tests and doing a 'pod install' better
+# matches our customers' environments.
+#
+# Note: if you ignore the Pods directory, make sure to uncomment
+# `pod install` in .travis.yml
+#
+Pods/
+Podfile.lock
+*.xcworkspace
+
+# CMake
+Debug
+Release
