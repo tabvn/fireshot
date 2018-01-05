@@ -15,8 +15,8 @@ class Shot{
     
     private var ref: DatabaseReference!
     let id: String!
-    let file:String!
-    let url:String!
+    var file:String!
+    var url:String!
     let uid: String!
     let timestamp: Int!
     
@@ -28,6 +28,14 @@ class Shot{
         self.url = url
         self.uid = uid
         self.timestamp = lround(NSDate().timeIntervalSince1970 * 1000)
+    }
+    
+    func setFilename(name: String){
+    
+        self.file = name
+    }
+    func setDownloadUrl(urlString: String){
+        self.url = urlString
     }
     
     func save(){

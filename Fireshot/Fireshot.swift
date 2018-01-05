@@ -53,7 +53,43 @@ class Fireshot {
         }
         
     }
-    func screenCapture(complete: @escaping (_ url: String?, _ error: Error?)->Void){
+    
+    func fullScreenCapture(){
+        
+        
+       /* let img = CGDisplayCreateImage(CGMainDisplayID())
+        let dest = CGImageDestinationCreateWithURL(destination, kUTTypePNG, 1, nil)
+        CGImageDestinationAddImage(dest!, img!, nil)
+        CGImageDestinationFinalize(dest!)
+        
+        return destination*/
+        
+        let image = CGDisplayCreateImage(CGMainDisplayID())
+        
+        let timestamp: Int = lround(NSDate().timeIntervalSince1970 * 1000)
+        let filename = "\(timestamp)_shot.png"
+        
+        let path = self.tempDir + filename
+        
+        let url: NSURL = NSURL(fileURLWithPath: path)
+        
+        guard let destination = CGImageDestinationCreateWithURL(url, kUTTypePNG, 1, nil) else{
+            
+            return
+        }
+      
+        
+        CGImageDestinationAddImage(destination, image!, nil)
+        CGImageDestinationFinalize(destination)
+    
+        self.saveScreenshot(destination: path)
+        
+        
+        
+    }
+    
+    
+    func screenCapture(){
         
         // Implement screen capture use /usr/sbin/screencapture
         
@@ -77,6 +113,21 @@ class Fireshot {
         task.launch()
         task.waitUntilExit()
         
+        
+        self.saveScreenshot(destination: destination)
+    
+        
+       // save screen
+        self.saveScreenshot(destination: destination)
+        
+        
+    }
+    func saveScreenshot(destination:String!){
+        
+        guard let userId = self.getCurrentUserId() else {
+            
+            return
+        }
         let file = FileManager()
         
         if file.fileExists(atPath: destination){
@@ -100,6 +151,12 @@ class Fireshot {
             
             let cloudImage = NSImage(named: NSImage.Name("cloud_upload"))
             self.menuButton.image = cloudImage
+            let shot = Shot(file: "", url: "", uid: userId)
+            let filename = shot.id + ".png"
+            shot.setFilename(name: filename)
+            
+        
+            
             
             ref.child(filename).putData(fileData, metadata: metaData, completion: { (storeMetaData, error) in
                 
@@ -110,7 +167,7 @@ class Fireshot {
                 if let error = error{
                     
                     print("An error saving shot to storage", error)
-                    return complete(nil, error) // Callback function
+                    
                     
                 }
                 
@@ -119,7 +176,7 @@ class Fireshot {
                 if let downloadUrl: String = storeMetaData?.downloadURL()?.absoluteString{
                     
                     // show notification to user
-                     self.showNotification(title: "Screenshot saved", text: "Screenshot has been copied to your clipboard.", image: fileData)
+                    self.showNotification(title: "Screenshot saved", text: "Screenshot has been copied to your clipboard.", image: fileData)
                     
                     // copy to clipboard
                     
@@ -127,15 +184,12 @@ class Fireshot {
                     
                     pasteClipBoard.clearContents()
                     pasteClipBoard.setString(downloadUrl, forType: NSPasteboard.PasteboardType.string)
+                    
+                    shot.setDownloadUrl(urlString: downloadUrl)
+                    shot.save() // save shot to firebase
+                    
+                    
                 
-                    if let userId = self.getCurrentUserId(){
-                        
-                        let shot = Shot(file: filename, url: downloadUrl, uid: userId)
-                        shot.save()
-                    }
-                    
-                    
-                    return complete(downloadUrl, nil)
                 }
                 
                 
@@ -145,12 +199,6 @@ class Fireshot {
             
             
         }
-    
-    
-        
-       
-        
-        
         
     }
     
