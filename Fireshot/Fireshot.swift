@@ -9,6 +9,7 @@
 import Foundation
 import FirebaseAuth
 import FirebaseStorage
+import FirebaseDatabase
 
 class Fireshot {
     
@@ -17,6 +18,12 @@ class Fireshot {
     private var menuButton: NSButton!
     private var popover: NSPopover!
     private var activeVC: NSViewController!
+    
+    var mainTable: NSTableView! = nil
+    
+    private var shots: [Shot] = [Shot]()
+    
+    
     init(){
         
         if let _ = self.getCurrentUser(){
@@ -32,6 +39,74 @@ class Fireshot {
         
         
         self.tempDir = NSTemporaryDirectory()
+        self.onShotAdded()
+    }
+    
+    func getShots() -> [Shot] {
+        return self.shots
+    }
+    
+    
+    func onShotAdded(){
+        
+        guard let _ = self.getCurrentUser() else {
+            return
+        }
+        let ref = Database.database().reference(withPath: "shots")
+        
+       
+        guard let userId = self.getCurrentUserId() else {
+            return
+        }
+        
+        ref.child(userId).queryLimited(toLast: 5).observe(DataEventType.childAdded) { (snapshot: DataSnapshot) in
+            
+            let data: [String: Any] = snapshot.value as! [String : Any]
+            guard let timestamp: Double = data["timestamp"] as? Double, let id: String = snapshot.key , let file: String = (data["file"] as? String), let url: String = (data["url"] as? String), let userId: String = data["uid"] as? String else{
+                
+                return
+            }
+            let shot = Shot(file: file, url: url, uid: userId, id: id, timestamp: timestamp)
+           
+            
+           /* Storage.storage().reference(withPath: "shots").child(file).downloadURL(completion: { (imageUrl, error) in
+                if let imageUrl = imageUrl{
+                  
+                    let image = NSImage(contentsOf: imageUrl)
+                    shot.setImage(image: image!)
+                    
+                    if self.mainTable != nil{
+                        
+                        self.mainTable.reloadData()
+                    }
+                    
+                }
+            })*/
+            
+            self.shots.append(shot)
+            
+       
+            if self.mainTable != nil {
+                
+                print("Reload Data!!!!!!")
+                self.mainTable.reloadData()
+            }
+            
+        }
+        
+        ref.child(userId).observe(DataEventType.childRemoved) { (snapshot) in
+            
+            let key: String = snapshot.key
+            
+            let result = self.shots.filter{ $0.id != key }
+            
+            self.shots = result
+            if self.mainTable != nil{
+                self.mainTable.reloadData()
+            }
+
+        }
+        
     }
     
     func auth(email: String, password: String, completion: @escaping (_ user: User?, _ error: Error?) -> Void){
@@ -63,7 +138,7 @@ class Fireshot {
             
             
             self.currentUser = _user
-            
+            self.onShotAdded()
             return completion(_user, nil)
         }
         
@@ -166,7 +241,7 @@ class Fireshot {
             
             let cloudImage = NSImage(named: NSImage.Name("cloud_upload"))
             self.menuButton.image = cloudImage
-            let shot = Shot(file: "", url: "", uid: userId)
+            let shot = Shot(file: "", url: "", uid: userId, id: nil, timestamp: nil)
             let filename = shot.id + ".png"
             shot.setFilename(name: filename)
             
@@ -334,4 +409,22 @@ class Fireshot {
 
     
     
+}
+
+
+
+extension Double{
+    
+    func getDateTimeString() -> String{
+       
+        let date = Date(timeIntervalSince1970: self)
+        let dateFormatter = DateFormatter()
+       
+        dateFormatter.locale = NSLocale.current
+        dateFormatter.timeZone = TimeZone.current
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm a" //Specify your format that you want
+        let strDate = dateFormatter.string(from: date)
+        
+        return strDate
+    }
 }

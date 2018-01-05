@@ -7,10 +7,42 @@
 //
 
 import Cocoa
+import FirebaseDatabase
 
-class ViewController: NSViewController {
+class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSource {
 
     var fs: Fireshot!
+    
+    var scrollViewTableView: NSScrollView = {
+        
+        let sv = NSScrollView()
+        
+        sv.translatesAutoresizingMaskIntoConstraints = false
+        
+        return sv
+        
+    }()
+    
+    
+    let tableView: NSTableView = {
+        
+        let table = NSTableView(frame: .zero)
+        
+        table.translatesAutoresizingMaskIntoConstraints = false
+        
+        table.rowSizeStyle = .small
+        table.rowHeight = 50
+        
+        let column = NSTableColumn(identifier: NSUserInterfaceItemIdentifier(rawValue: "column"))
+        table.headerView = nil
+        column.width = 200
+        table.addTableColumn(column)
+        
+        
+        return table
+       
+        
+    }()
     
     let titleLabel: NSTextField = {
         
@@ -55,9 +87,10 @@ class ViewController: NSViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
+
         setupView()
+        
+        loadTableData()
     }
     
     @objc func captureSelectScreen(){
@@ -98,18 +131,73 @@ class ViewController: NSViewController {
         header.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
         header.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0).isActive = true
         header.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
-        header.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        header.heightAnchor.constraint(equalToConstant: 30).isActive = true
         header.widthAnchor.constraint(equalToConstant: 300).isActive = true
         
         header.addSubview(selectButton)
         header.addSubview(fullScreenButton)
         
-        selectButton.leftAnchor.constraint(equalTo: header.leftAnchor, constant: 10).isActive = true
-        selectButton.topAnchor.constraint(equalTo: header.topAnchor, constant: 10).isActive = true
+        selectButton.leftAnchor.constraint(equalTo: header.leftAnchor, constant: 0).isActive = true
+        selectButton.topAnchor.constraint(equalTo: header.topAnchor, constant: 0).isActive = true
         selectButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
         
-        fullScreenButton.leftAnchor.constraint(equalTo: header.leftAnchor, constant: 70).isActive = true
-        fullScreenButton.topAnchor.constraint(equalTo: header.topAnchor, constant: 10).isActive = true
+        fullScreenButton.leftAnchor.constraint(equalTo: selectButton.rightAnchor, constant: 0).isActive = true
+        fullScreenButton.topAnchor.constraint(equalTo: header.topAnchor, constant: 0).isActive = true
+        
+        
+        //view.addSubview(tableView)
+        
+        
+        tableView.delegate = self
+        tableView.dataSource = self
+    
+        scrollViewTableView.documentView = tableView
+        scrollViewTableView.contentInsets = NSEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
+        view.addSubview(scrollViewTableView)
+        
+        scrollViewTableView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0).isActive = true
+        scrollViewTableView.topAnchor.constraint(equalTo: header.bottomAnchor, constant: 0).isActive = true
+        scrollViewTableView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
+        scrollViewTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50).isActive = true
+        
+        
+        
+        
     }
+    
+    func loadTableData(){
+        
+        self.fs.mainTable = tableView
+        
+    }
+    
+    func numberOfRows(in tableView: NSTableView) -> Int {
+        
+        return fs.getShots().count
+    }
+    func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
+        return 30
+    }
+    func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
+
+        let tableCellView = shotTableCell()
+        
+        let shots = fs.getShots()
+        
+        let shot: Shot = shots[row]
+        
+        tableCellView.setShot(shot: shot)
+        
+        return tableCellView
+    }
+    
+    override func viewWillDisappear() {
+        fs.mainTable = nil
+    }
+    
+    func tableView(_ tableView: NSTableView, shouldSelectRow row: Int) -> Bool {
+        return false
+    }
+    
     
 }

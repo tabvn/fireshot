@@ -49,6 +49,7 @@ class LoginViewController: NSViewController {
         
         btn.translatesAutoresizingMaskIntoConstraints = false
         
+        
         return btn
     }()
     
@@ -57,7 +58,8 @@ class LoginViewController: NSViewController {
         let btn = NSButton(title: "Quit", target: self, action: #selector(self.quit))
         
         btn.translatesAutoresizingMaskIntoConstraints = false
-        
+        btn.isBordered = false
+        btn.setAccessibilityIndex(2)
         return btn
     }()
     
@@ -148,7 +150,7 @@ class LoginViewController: NSViewController {
         button.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 10).isActive = true
         button.leftAnchor.constraint(equalTo:parentView.leftAnchor, constant: 10).isActive = true
         
-        quitButton.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 10).isActive = true
+        quitButton.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 5).isActive = true
         quitButton.rightAnchor.constraint(equalTo:parentView.rightAnchor, constant: -10).isActive = true
         
         

@@ -18,16 +18,27 @@ class Shot{
     var file:String!
     var url:String!
     let uid: String!
-    let timestamp: Int!
+    let timestamp: Double!
+    var image: NSImage! = nil
     
-    init(file: String, url: String, uid: String) {
+    init(file: String, url: String, uid: String, id: String?, timestamp: Double?) {
         
         self.ref = Database.database().reference(withPath: "shots")
-        self.id = self.ref.childByAutoId().key
+        if id == nil{
+             self.id = self.ref.childByAutoId().key
+        }else{
+            self.id = id
+        }
+       
+        if timestamp == nil{
+          self.timestamp = NSDate().timeIntervalSince1970
+        }else{
+            self.timestamp = timestamp
+        }
         self.file = file
         self.url = url
         self.uid = uid
-        self.timestamp = lround(NSDate().timeIntervalSince1970 * 1000)
+        
     }
     
     func setFilename(name: String){
@@ -36,6 +47,10 @@ class Shot{
     }
     func setDownloadUrl(urlString: String){
         self.url = urlString
+    }
+    func setImage(image: NSImage){
+        
+        self.image = image
     }
     
     func save(){
@@ -49,7 +64,7 @@ class Shot{
         
        // save to firebase db
         
-        self.ref.child(self.id).setValue(shot) { (error, databaseRef) in
+        self.ref.child(self.uid).child(self.id).setValue(shot) { (error, databaseRef) in
            
             if let error = error{
                 print("Debug: saving the shot with error ", error )
