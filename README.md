@@ -37,3 +37,7 @@ com.apple.screencapture.interactive
 ## Video
 
 https://www.youtube.com/watch?v=ULagU2U8mJQ
+
+## Screenshot
+
+<img src="https://raw.githubusercontent.com/tabvn/fireshot/master/screen.png" />
