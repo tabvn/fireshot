@@ -83,7 +83,7 @@ class Fireshot {
                 }
             })*/
             
-            self.shots.append(shot)
+            self.shots.insert(shot, at: 0)
             
        
             if self.mainTable != nil {
