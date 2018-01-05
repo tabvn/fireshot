@@ -85,9 +85,6 @@ class shotTableCell: NSTableCellView {
         titleLabel.rightAnchor.constraint(equalTo: self.openButton.leftAnchor, constant: 0).isActive = true
   
       
-        print("fdsafsaf")
-        
-        
         
         
         

@@ -100,7 +100,13 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     @objc func captureFullScreen(){
         
         fs.tooglePopover()
-        self.fs.fullScreenCapture()
+        
+        let deadline: DispatchTime = DispatchTime.now() + 1
+        DispatchQueue.main.asyncAfter(deadline: deadline) {
+                self.fs.fullScreenCapture()
+            
+        }
+    
         
     }
     @objc func signOut(){
