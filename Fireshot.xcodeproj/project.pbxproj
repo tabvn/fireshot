@@ -8,10 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		544430791FFE11EC0072BDF7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 544430781FFE11EC0072BDF7 /* AppDelegate.swift */; };
-		5444307B1FFE11EC0072BDF7 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5444307A1FFE11EC0072BDF7 /* ViewController.swift */; };
 		5444307D1FFE11EC0072BDF7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5444307C1FFE11EC0072BDF7 /* Assets.xcassets */; };
 		544430801FFE11EC0072BDF7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5444307E1FFE11EC0072BDF7 /* Main.storyboard */; };
 		5444308B1FFE13F50072BDF7 /* Fireshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5444308A1FFE13F50072BDF7 /* Fireshot.swift */; };
+		548972B31FFF5FCC00E8416B /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 548972B11FFF5FCC00E8416B /* LoginViewController.swift */; };
+		548972B41FFF5FCC00E8416B /* LoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 548972B21FFF5FCC00E8416B /* LoginViewController.xib */; };
+		548972B71FFF779C00E8416B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 548972B51FFF779C00E8416B /* ViewController.swift */; };
+		548972B81FFF779C00E8416B /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 548972B61FFF779C00E8416B /* ViewController.xib */; };
 		54F0C9481FFE199600903D77 /* Shot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54F0C9471FFE199600903D77 /* Shot.swift */; };
 		54FB1CEA1FFF17340013B487 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 54FB1CE91FFF17340013B487 /* GoogleService-Info.plist */; };
 		7ADB58EE64F59C3E776FFF06 /* Pods_Fireshot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D06FACEB83A8E4A86587D66F /* Pods_Fireshot.framework */; };
@@ -21,12 +24,15 @@
 		501EAC7BB48244269C034075 /* Pods-Fireshot.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Fireshot.release.xcconfig"; path = "Pods/Target Support Files/Pods-Fireshot/Pods-Fireshot.release.xcconfig"; sourceTree = "<group>"; };
 		544430751FFE11EC0072BDF7 /* Fireshot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Fireshot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		544430781FFE11EC0072BDF7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		5444307A1FFE11EC0072BDF7 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		5444307C1FFE11EC0072BDF7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5444307F1FFE11EC0072BDF7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		544430811FFE11EC0072BDF7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		544430821FFE11EC0072BDF7 /* Fireshot.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Fireshot.entitlements; sourceTree = "<group>"; };
 		5444308A1FFE13F50072BDF7 /* Fireshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fireshot.swift; sourceTree = "<group>"; };
+		548972B11FFF5FCC00E8416B /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		548972B21FFF5FCC00E8416B /* LoginViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoginViewController.xib; sourceTree = "<group>"; };
+		548972B51FFF779C00E8416B /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		548972B61FFF779C00E8416B /* ViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ViewController.xib; sourceTree = "<group>"; };
 		54F0C9471FFE199600903D77 /* Shot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shot.swift; sourceTree = "<group>"; };
 		54FB1CE91FFF17340013B487 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		D06FACEB83A8E4A86587D66F /* Pods_Fireshot.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Fireshot.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -78,7 +84,10 @@
 				54F0C9461FFE198700903D77 /* model */,
 				544430781FFE11EC0072BDF7 /* AppDelegate.swift */,
 				5444308A1FFE13F50072BDF7 /* Fireshot.swift */,
-				5444307A1FFE11EC0072BDF7 /* ViewController.swift */,
+				548972B11FFF5FCC00E8416B /* LoginViewController.swift */,
+				548972B21FFF5FCC00E8416B /* LoginViewController.xib */,
+				548972B51FFF779C00E8416B /* ViewController.swift */,
+				548972B61FFF779C00E8416B /* ViewController.xib */,
 				5444307C1FFE11EC0072BDF7 /* Assets.xcassets */,
 				5444307E1FFE11EC0072BDF7 /* Main.storyboard */,
 				54FB1CE91FFF17340013B487 /* GoogleService-Info.plist */,
@@ -174,6 +183,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				548972B81FFF779C00E8416B /* ViewController.xib in Resources */,
+				548972B41FFF5FCC00E8416B /* LoginViewController.xib in Resources */,
 				5444307D1FFE11EC0072BDF7 /* Assets.xcassets in Resources */,
 				544430801FFE11EC0072BDF7 /* Main.storyboard in Resources */,
 				54FB1CEA1FFF17340013B487 /* GoogleService-Info.plist in Resources */,
@@ -245,8 +256,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				548972B71FFF779C00E8416B /* ViewController.swift in Sources */,
+				548972B31FFF5FCC00E8416B /* LoginViewController.swift in Sources */,
 				5444308B1FFE13F50072BDF7 /* Fireshot.swift in Sources */,
-				5444307B1FFE11EC0072BDF7 /* ViewController.swift in Sources */,
 				544430791FFE11EC0072BDF7 /* AppDelegate.swift in Sources */,
 				54F0C9481FFE199600903D77 /* Shot.swift in Sources */,
 			);

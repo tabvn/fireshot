@@ -15,31 +15,43 @@ class Fireshot {
     private var tempDir: String!
     private var currentUser: User?
     private var menuButton: NSButton!
-    
-    
+    private var popover: NSPopover!
+    private var activeVC: NSViewController!
     init(){
+        
+        if let _ = self.getCurrentUser(){
+            let mainVC = ViewController()
+            mainVC.fs = self
+            self.activeVC = mainVC
+        }else{
+            let loginVC = LoginViewController()
+            loginVC.fs = self
+            self.activeVC = loginVC
+            
+        }
+        
         
         self.tempDir = NSTemporaryDirectory()
     }
     
-    func auth(){
+    func auth(email: String, password: String, completion: @escaping (_ user: User?, _ error: Error?) -> Void){
         
-        let email:String = "toan@tabvn.com"
-        let password: String = "12345678"
+     
         
         
         if let _ = self.getCurrentUserId(){
             
             // user already logged we dont need do login any more
-            
-            return
+            let currentUser = self.getCurrentUser()
+            return completion(currentUser, nil)
         }
         Auth.auth().signIn(withEmail: email, password: password) { (user, error) in
             
             if let error = error {
                 
                 print("Login Errror",error)
-                return
+                
+                return completion(nil, error)
             }
             
             guard let _user = user else{
@@ -49,12 +61,15 @@ class Fireshot {
                 return
             }
             
+            
             self.currentUser = _user
+            
+            return completion(_user, nil)
         }
         
     }
     
-    func fullScreenCapture(){
+    @objc func fullScreenCapture(){
         
         
        /* let img = CGDisplayCreateImage(CGMainDisplayID())
@@ -89,7 +104,7 @@ class Fireshot {
     }
     
     
-    func screenCapture(){
+    @objc func screenCapture(){
         
         // Implement screen capture use /usr/sbin/screencapture
         
@@ -209,6 +224,12 @@ class Fireshot {
         
     }
     
+    func getCurrentUserEmail() -> String?{
+        
+        return Auth.auth().currentUser?.email
+        
+    }
+    
     func showNotification(title: String, text: String, image: Data) -> Void {
         
         let notification = NSUserNotification()
@@ -225,6 +246,92 @@ class Fireshot {
         self.menuButton = button
     }
     
+    func getCurrentUser() -> User?{
+        
+        return Auth.auth().currentUser
+    }
+    func signOut(){
+        
+        do{
+            try Auth.auth().signOut()
+        }
+        catch{
+            print("Logout error")
+        }
+        
+    }
+    
+    func setPopover(popover: NSPopover){
+        
+        self.popover = popover
+    }
+    
+    func tooglePopover(){
+        
+        if self.popover.isShown{
+            
+            self.popover.close()
+        }else{
+            
+            if let _ =  self.getCurrentUser() {
+                
+                let mainVC = ViewController()
+                mainVC.fs = self
+                self.activeVC = mainVC
+                
+                
+            }else{
+                
+                let loginVC = LoginViewController()
+                loginVC.fs = self
+                self.activeVC = loginVC
+                
+            }
+            
+            self.popover.contentViewController = self.activeVC
+            self.popover.show(relativeTo: self.menuButton.bounds, of: self.menuButton, preferredEdge: NSRectEdge.minY)
+        }
+        
+        
+    }
+    
+
+    @objc func exitApp(){
+    
+        NSApplication.shared.terminate(self)
+    }
+    @objc func showMainViewController(show: Bool){
+        
+        if self.popover.isShown{
+            self.popover.close()
+        }
+        let VC = ViewController()
+        VC.fs = self
+        self.activeVC = VC
+        
+        self.popover.contentViewController = VC
+        if show{
+             self.popover.show(relativeTo: self.menuButton.bounds, of: self.menuButton, preferredEdge: NSRectEdge.minY)
+        }
+       
+        
+    }
+    @objc func showLoginViewController(show: Bool){
+        
+        if self.popover.isShown{
+            self.popover.close()
+        }
+        let loginVC = LoginViewController()
+        loginVC.fs = self
+        self.activeVC = loginVC
+        
+        popover.contentViewController = loginVC
+        if show{
+            popover.show(relativeTo: self.menuButton.bounds, of: self.menuButton, preferredEdge: NSRectEdge.minY)
+        }
+       
+    }
+
     
     
 }
