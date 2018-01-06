@@ -49,9 +49,7 @@ class Fireshot {
     
     func pasteFromClipboard(){
         
-        guard let userId = self.getCurrentUserId() else {
-            return
-        }
+       
         
         guard let type: String = NSPasteboard.general.pasteboardItems?.first?.types.first?.rawValue else{
             
@@ -68,45 +66,91 @@ class Fireshot {
         case "public.utf8-plain-text":
             
             
-            if let stringContent = self.clipboardContent(){
+            self.uploadTextContent(html: false)
+            
+            break
+            
+        case  "public.html":
+            
+            self.uploadTextContent(html: true)
+            
+            break
+            
+            
+        default:
+            
+            
+         print("not recognited")
+        }
+        
+        return
+        
+        
+        
+        
+        
+    }
+    
+    
+    func clipboardHtmlContent() -> Data?{
+        
+        guard let html: Data = NSPasteboard.general.pasteboardItems?.first?.data(forType: NSPasteboard.PasteboardType.html) else {
+            
+            return nil
+        }
+        
+        return html
+    }
+    
+    func uploadTextContent(html: Bool){
+        
+        guard let userId = self.getCurrentUserId() else {
+            
+           return
+        }
+        
+        let shot = Shot(file: "", url: "", uid: userId, id: nil, timestamp: nil)
+        var filename: String!
+        
+        
+        
+        var data: Data?
+        let meta: StorageMetadata! = StorageMetadata()
+        
+        
+        if html{
+            meta.contentType = "text/html"
+            filename = shot.id + ".html"
+            data = self.clipboardHtmlContent()
+            
+        }else{
+            
+            data = self.clipboardContent()?.data(using: String.Encoding(rawValue: String.Encoding.unicode.rawValue))
+            meta.contentType = "text/plain"
+            filename = shot.id + ".txt"
+        }
+        
+        
+        
+
+        if let data = data{
+            
+            self.storageUpload(filename: filename, data: data, meta: meta, complete: { (url, error) in
                 
-                let shot = Shot(file: "", url: "", uid: userId, id: nil, timestamp: nil)
-                let filename = shot.id + ".txt"
-                
-                let meta = StorageMetadata()
-                meta.contentType = "text/plain"
-                
-                guard let data: Data = stringContent.data(using: String.Encoding(rawValue: String.Encoding.utf8.rawValue)) else{
-                    
+                guard let url = url else  {
                     
                     return
                 }
                 
-                self.storageUpload(filename: filename, data: data, meta: meta, complete: { (url, error) in
-                    
-                    guard let url = url else  {
-                        
-                        return
-                    }
-                    
-                    self.copyToClipboard(text: url)
-                    self.showNotification(title: "Clipboard content saved", text: "URl of your content has been copied to your clipboard.", image: data)
+                self.copyToClipboard(text: url)
+                self.showNotification(title: "Clipboard content saved", text: "URl of your content has been copied to your clipboard.", image: data)
                 
-                    shot.setDownloadUrl(urlString: url)
-                    shot.setFilename(name: filename)
-                    shot.save()
-                })
-                
-            }
-            
-            break
-            
-        default:
-            
-            print("Dont know what is this file")
+                shot.setDownloadUrl(urlString: url)
+                shot.setFilename(name: filename)
+                shot.save()
+            })
         }
         
-        return
         
         
         
@@ -137,7 +181,7 @@ class Fireshot {
     func clipboardContent() -> String?
     {
     
-        
+    
         return NSPasteboard.general.pasteboardItems?.first?.string(forType: .string)
     }
     

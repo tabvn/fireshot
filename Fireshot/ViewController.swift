@@ -10,7 +10,7 @@ import Cocoa
 import FirebaseDatabase
 
 class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSource {
-
+    
     var fs: Fireshot!
     let viewWidth: CGFloat = 250
     let viewHeight: CGFloat = 250
@@ -31,7 +31,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     }()
     
     lazy var mainMenu: NSMenu = {
-       
+        
         let menu = NSMenu()
         
         var email: String? = "My Account"
@@ -39,7 +39,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
             email = fs.getCurrentUserEmail()
             
         }
-       
+        
         menu.addItem(withTitle: email!, action: nil, keyEquivalent: "")
         menu.addItem(withTitle: "Sign Out", action: #selector(self.signOut), keyEquivalent: "")
         menu.addItem(withTitle: "Quit Fireshot", action: #selector(self.quitApp), keyEquivalent: "")
@@ -56,7 +56,10 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         let menu = NSMenu()
         
         menu.addItem(withTitle: "Full Screen Capture", action: #selector(self.captureFullScreen), keyEquivalent: "")
-        menu.addItem(withTitle: "Paste text from clipboard", action: #selector(self.pasteFromClipboard), keyEquivalent: "")
+        let pasteItem = NSMenuItem(title: "Paste text from clipboard", action: #selector(self.pasteFromClipboard), keyEquivalent: "")
+        pasteItem.allowsKeyEquivalentWhenHidden = true
+        pasteItem.accessibilityAllowedValues()
+        menu.addItem(pasteItem)
         
         return menu
         
@@ -101,7 +104,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         
         
         return table
-       
+        
         
     }()
     
@@ -109,22 +112,22 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     
     let header: NSView = {
         
-       let view = NSView()
+        let view = NSView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
     let headerLine:NSView = {
         
-       let box = NSView()
-       box.translatesAutoresizingMaskIntoConstraints = false
-       
-       box.wantsLayer = true
+        let box = NSView()
+        box.translatesAutoresizingMaskIntoConstraints = false
+        
+        box.wantsLayer = true
         
         box.layer?.backgroundColor = CGColor(red: 0, green: 0, blue: 0, alpha: 0.1)
         
         
-       return box
+        return box
     }()
     lazy var selectButton: NSButton = {
         let image = NSImage(named: NSImage.Name("select"))
@@ -144,6 +147,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         button.isBordered = false
         button.translatesAutoresizingMaskIntoConstraints = false
         button.imageScaling = .scaleAxesIndependently
+        
         return button
     }()
     
@@ -160,7 +164,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         setupView()
         
         loadTableData()
@@ -201,7 +205,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         NSApplication.shared.terminate(self)
     }
     @objc func openMenu(sender: NSButton){
-   
+        
         let p = NSPoint(x: sender.frame.origin.x, y: sender.frame.origin.y - (sender.frame.height / 2))
         self.mainMenu.popUp(positioning: nil, at: p, in: sender.superview)
         
@@ -218,16 +222,16 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         
         let deadline: DispatchTime = DispatchTime.now() + 1
         DispatchQueue.main.asyncAfter(deadline: deadline) {
-                self.fs.fullScreenCapture()
+            self.fs.fullScreenCapture()
             
         }
-    
+        
         
     }
     @objc func signOut(){
         self.fs.signOut()
         self.fs.tooglePopover()
-
+        
     }
     func setupView(){
         
@@ -237,7 +241,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         
         view.addSubview(header)
         view.addSubview(headerLine)
-       
+        
         
         
         header.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
@@ -248,7 +252,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         
         
         
-       
+        
         
         headerLine.topAnchor.constraint(equalTo: header.bottomAnchor, constant: -1).isActive = true
         headerLine.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0).isActive = true
@@ -279,7 +283,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         
         tableView.delegate = self
         tableView.dataSource = self
-    
+        
         scrollViewTableView.documentView = tableView
         scrollViewTableView.contentInsets = NSEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
         view.addSubview(scrollViewTableView)
@@ -308,7 +312,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         return 30
     }
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-
+        
         let tableCellView = shotTableCell()
         
         let shots = fs.getShots()
@@ -317,7 +321,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         
         tableCellView.setShot(shot: shot)
         
-       tableCellView.viewVC = self
+        tableCellView.viewVC = self
         
         
         return tableCellView
@@ -333,6 +337,6 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         return false
     }
     
-   
-
+    
+    
 }
