@@ -8,7 +8,7 @@
 
 import Foundation
 import FirebaseDatabase
-
+import FirebaseStorage
 
 
 class Shot{
@@ -53,6 +53,14 @@ class Shot{
         self.image = image
     }
     
+    func delete(){
+        
+        self.ref.child(self.uid).child(self.id).removeValue()
+        Storage.storage().reference(withPath: "shots").child(self.file).delete { (error) in
+            
+        }
+        
+    }
     func save(){
         
         let shot: [String: Any] = [

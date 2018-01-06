@@ -59,7 +59,7 @@ class Fireshot {
             return
         }
         
-        ref.child(userId).queryLimited(toLast: 5).observe(DataEventType.childAdded) { (snapshot: DataSnapshot) in
+        ref.child(userId).queryLimited(toLast: 10).observe(DataEventType.childAdded) { (snapshot: DataSnapshot) in
             
             let data: [String: Any] = snapshot.value as! [String : Any]
             guard let timestamp: Double = data["timestamp"] as? Double, let id: String = snapshot.key , let file: String = (data["file"] as? String), let url: String = (data["url"] as? String), let userId: String = data["uid"] as? String else{
@@ -88,7 +88,7 @@ class Fireshot {
        
             if self.mainTable != nil {
                 
-                print("Reload Data!!!!!!")
+                
                 self.mainTable.reloadData()
             }
             
