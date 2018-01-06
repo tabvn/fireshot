@@ -11,12 +11,11 @@ import Cocoa
 class shotTableCell: NSTableCellView {
 
     var shot: Shot! = nil
-    
-    
-    lazy var openButton: NSButton = {
-        
+    var viewVC: ViewController! = nil
+
+    lazy var moreOptionButton: NSButton = {
        
-        let button = NSButton(title: "Open", target: self, action: #selector(self.openLink))
+        let button = NSButton(title: "More", target: self, action: #selector(self.openMenu))
         button.translatesAutoresizingMaskIntoConstraints = false
         button.isBordered = false
         button.wantsLayer = true
@@ -26,19 +25,7 @@ class shotTableCell: NSTableCellView {
         return button
     }()
     
-    lazy var deleteButton: NSButton = {
-        
-        
-        let button = NSButton(title: "Delete", target: self, action: #selector(self.deleteItem))
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.isBordered = false
-        button.wantsLayer = true
-        button.layer?.backgroundColor = CGColor.clear
-        
-        
-        return button
-    }()
-    
+  
     
     lazy var titleLabel: NSButton = {
         
@@ -62,20 +49,14 @@ class shotTableCell: NSTableCellView {
     }()
     
 
-    
-    @objc func deleteItem(){
-        
-        self.shot.delete()
-    }
-    @objc func openLink(){
-        
-    
-        if let url = URL(string: self.shot.url), NSWorkspace.shared.open(url) {
-            
-        }
+    @objc func openMenu(sender: NSButton){
+        let p = NSPoint(x: sender.frame.origin.x, y: sender.frame.origin.y - 0)
+        self.viewVC.selected = self.shot
+        self.viewVC.shotCellMenu.popUp(positioning: nil, at: p, in: sender.superview)
         
     }
-   
+
+
     override init(frame frameRect: NSRect) {
        
         super.init(frame: frameRect)
@@ -85,23 +66,19 @@ class shotTableCell: NSTableCellView {
         self.wantsLayer = true
         self.layer?.backgroundColor = CGColor(red: 0, green: 0, blue: 0, alpha: 0.05)
 
-        self.addSubview(openButton)
-        openButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true
+        self.addSubview(moreOptionButton)
+        moreOptionButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true
         
-        openButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
-        openButton.rightAnchor.constraint(equalTo: self.rightAnchor, constant: 0).isActive = true
+        moreOptionButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        moreOptionButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        moreOptionButton.rightAnchor.constraint(equalTo: self.rightAnchor, constant: 0).isActive = true
         
-        self.addSubview(deleteButton)
-        deleteButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true
-        
-        deleteButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
-        deleteButton.rightAnchor.constraint(equalTo: openButton.leftAnchor, constant: 0).isActive = true
-        
+
         
         titleLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true
         titleLabel.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 0).isActive = true
         titleLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        titleLabel.rightAnchor.constraint(equalTo: self.deleteButton.leftAnchor, constant: 0).isActive = true
+        titleLabel.rightAnchor.constraint(equalTo: moreOptionButton.leftAnchor, constant: 0).isActive = true
   
       
         

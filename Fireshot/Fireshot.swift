@@ -13,6 +13,7 @@ import FirebaseDatabase
 
 class Fireshot {
     
+    private var ref = Storage.storage().reference(withPath: "shots")
     private var tempDir: String!
     private var currentUser: User?
     private var menuButton: NSButton!
@@ -46,7 +47,110 @@ class Fireshot {
         return self.shots
     }
     
+    func pasteFromClipboard(){
+        
+        guard let userId = self.getCurrentUserId() else {
+            return
+        }
+        
+        guard let type: String = NSPasteboard.general.pasteboardItems?.first?.types.first?.rawValue else{
+            
+            return
+        }
+        
+        switch type {
+            
+        case "public.file-url":
+            
+           // feature for file upload from clipboard
+            break
+            
+        case "public.utf8-plain-text":
+            
+            
+            if let stringContent = self.clipboardContent(){
+                
+                let shot = Shot(file: "", url: "", uid: userId, id: nil, timestamp: nil)
+                let filename = shot.id + ".txt"
+                
+                let meta = StorageMetadata()
+                meta.contentType = "text/plain"
+                
+                guard let data: Data = stringContent.data(using: String.Encoding(rawValue: String.Encoding.utf8.rawValue)) else{
+                    
+                    
+                    return
+                }
+                
+                self.storageUpload(filename: filename, data: data, meta: meta, complete: { (url, error) in
+                    
+                    guard let url = url else  {
+                        
+                        return
+                    }
+                    
+                    self.copyToClipboard(text: url)
+                    self.showNotification(title: "Clipboard content saved", text: "URl of your content has been copied to your clipboard.", image: data)
+                
+                    shot.setDownloadUrl(urlString: url)
+                    shot.setFilename(name: filename)
+                    shot.save()
+                })
+                
+            }
+            
+            break
+            
+        default:
+            
+            print("Dont know what is this file")
+        }
+        
+        return
+        
+        
+        
+        
+        
+    }
+    func storageUpload(filename: String, data: Data, meta: StorageMetadata?, complete: @escaping (_ downloadURL: String?, _ error: Error?) -> Void){
+        
+        guard let userId = self.getCurrentUserId() else {
+            
+            return complete(nil, nil)
+        }
+        ref.child(userId).child(filename).putData(data, metadata: meta) { (file, error) in
+            
+            if let error = error{
+                
+                return complete(nil, error)
+            }
+            
+            guard let file = file, let fileUrl = file.downloadURL()?.absoluteString else{
+                
+                return complete(nil, nil)
+            }
+            
+            return complete(fileUrl, nil)
+        }
+    }
+    func clipboardContent() -> String?
+    {
     
+        
+        return NSPasteboard.general.pasteboardItems?.first?.string(forType: .string)
+    }
+    
+    func copyToClipboard(text: String){
+        
+        let pasteClipBoard = NSPasteboard.general
+        
+        pasteClipBoard.clearContents()
+        pasteClipBoard.setString(text, forType: NSPasteboard.PasteboardType.string)
+        
+       
+        
+    }
     func onShotAdded(){
         
         guard let _ = self.getCurrentUser() else {
@@ -62,26 +166,12 @@ class Fireshot {
         ref.child(userId).queryLimited(toLast: 10).observe(DataEventType.childAdded) { (snapshot: DataSnapshot) in
             
             let data: [String: Any] = snapshot.value as! [String : Any]
-            guard let timestamp: Double = data["timestamp"] as? Double, let id: String = snapshot.key , let file: String = (data["file"] as? String), let url: String = (data["url"] as? String), let userId: String = data["uid"] as? String else{
+            guard let timestamp: Double = data["timestamp"] as? Double, let id: String = snapshot.key as String? , let file: String = (data["file"] as? String), let url: String = (data["url"] as? String), let userId: String = data["uid"] as? String else{
                 
                 return
             }
             let shot = Shot(file: file, url: url, uid: userId, id: id, timestamp: timestamp)
-           
-            
-           /* Storage.storage().reference(withPath: "shots").child(file).downloadURL(completion: { (imageUrl, error) in
-                if let imageUrl = imageUrl{
-                  
-                    let image = NSImage(contentsOf: imageUrl)
-                    shot.setImage(image: image!)
-                    
-                    if self.mainTable != nil{
-                        
-                        self.mainTable.reloadData()
-                    }
-                    
-                }
-            })*/
+
             
             self.shots.insert(shot, at: 0)
             
@@ -226,7 +316,7 @@ class Fireshot {
             
             let fileData: Data = file.contents(atPath: destination)!
             // upload this file data to FIrebase Storage
-            let ref = Storage.storage().reference(withPath: "shots")
+            
             
             let metaData = StorageMetadata()
             
@@ -270,14 +360,9 @@ class Fireshot {
                     
                     // copy to clipboard
                     
-                    let pasteClipBoard = NSPasteboard.general
-                    
-                    pasteClipBoard.clearContents()
-                    pasteClipBoard.setString(downloadUrl, forType: NSPasteboard.PasteboardType.string)
-                    
+                    self.copyToClipboard(text: downloadUrl)
                     shot.setDownloadUrl(urlString: downloadUrl)
                     shot.save() // save shot to firebase
-                    
                     
                 
                 }
@@ -305,14 +390,17 @@ class Fireshot {
         
     }
     
-    func showNotification(title: String, text: String, image: Data) -> Void {
+    func showNotification(title: String, text: String, image: Data?) -> Void {
         
         let notification = NSUserNotification()
     
         notification.title = "Fireshot"
         notification.informativeText = text
         notification.soundName = NSUserNotificationDefaultSoundName
-        notification.contentImage = NSImage(data: image)
+        if let image = image{
+            notification.contentImage = NSImage(data: image)
+        }
+        
         NSUserNotificationCenter.default.deliver(notification)
         
     }

@@ -19,7 +19,6 @@ class Shot{
     var url:String!
     let uid: String!
     let timestamp: Double!
-    var image: NSImage! = nil
     
     init(file: String, url: String, uid: String, id: String?, timestamp: Double?) {
         
@@ -48,10 +47,7 @@ class Shot{
     func setDownloadUrl(urlString: String){
         self.url = urlString
     }
-    func setImage(image: NSImage){
-        
-        self.image = image
-    }
+
     
     func delete(){
         
