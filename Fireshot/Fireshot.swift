@@ -248,7 +248,7 @@ class Fireshot {
         
             
             
-            ref.child(filename).putData(fileData, metadata: metaData, completion: { (storeMetaData, error) in
+            ref.child(userId).child(filename).putData(fileData, metadata: metaData, completion: { (storeMetaData, error) in
                 
                 // delete file
                 
