@@ -11,6 +11,9 @@ import FirebaseDatabase
 
 class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSource {
     
+
+    
+    //
     var fs: Fireshot!
     let viewWidth: CGFloat = 250
     let viewHeight: CGFloat = 250
@@ -114,6 +117,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     
     
     
+    
     let header: NSView = {
         
         let view = NSView()
@@ -165,7 +169,17 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     }()
     
     
-    
+    lazy var dropView: FileDropView = {
+        
+        let coder = NSCoder()
+        
+        let frame = NSRect()
+        let view = FileDropView(frame: frame)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        return view
+        
+    }()
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -240,17 +254,28 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     func setupView(){
         
         
+        dropView.fs = self.fs
+        
         view.widthAnchor.constraint(equalToConstant: viewWidth).isActive = true
         view.heightAnchor.constraint(equalToConstant: viewHeight).isActive = true
         
-        view.addSubview(header)
-        view.addSubview(headerLine)
+        view.addSubview(dropView)
+        
+        dropView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
+        dropView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0).isActive = true
+        dropView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
+        dropView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
+        dropView.widthAnchor.constraint(equalToConstant: viewWidth).isActive = true
+        dropView.heightAnchor.constraint(equalToConstant: viewHeight).isActive = true
         
         
+        dropView.addSubview(header)
+        dropView.addSubview(headerLine)
+
         
-        header.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
-        header.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0).isActive = true
-        header.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
+        header.topAnchor.constraint(equalTo: dropView.topAnchor, constant: 0).isActive = true
+        header.leftAnchor.constraint(equalTo: dropView.leftAnchor, constant: 0).isActive = true
+        header.rightAnchor.constraint(equalTo: dropView.rightAnchor, constant: 0).isActive = true
         header.heightAnchor.constraint(equalToConstant: 30).isActive = true
         header.widthAnchor.constraint(equalToConstant: 200).isActive = true
         
@@ -259,8 +284,8 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         
         
         headerLine.topAnchor.constraint(equalTo: header.bottomAnchor, constant: -1).isActive = true
-        headerLine.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0).isActive = true
-        headerLine.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
+        headerLine.leftAnchor.constraint(equalTo: dropView.leftAnchor, constant: 0).isActive = true
+        headerLine.rightAnchor.constraint(equalTo: dropView.rightAnchor, constant: 0).isActive = true
         headerLine.heightAnchor.constraint(equalToConstant: 1).isActive = true
         headerLine.widthAnchor.constraint(equalToConstant: viewWidth).isActive = true
         
@@ -290,7 +315,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         
         scrollViewTableView.documentView = tableView
         scrollViewTableView.contentInsets = NSEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
-        view.addSubview(scrollViewTableView)
+        dropView.addSubview(scrollViewTableView)
         
         scrollViewTableView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0).isActive = true
         scrollViewTableView.topAnchor.constraint(equalTo: headerLine.bottomAnchor, constant: 0).isActive = true

@@ -173,6 +173,32 @@ class Fireshot {
         
         
     }
+    
+    func storageUploadFileUrl(filename: String, url: URL, meta: StorageMetadata?, complete: @escaping (_ file: StorageMetadata?, _ error: Error?) -> Void){
+        
+        guard let userId = self.getCurrentUserId() else {
+            
+            return complete(nil, nil)
+        }
+        
+        
+        storageRef.child(userId).child(filename).putFile(from: url, metadata: meta) { (file, error) in
+            
+            if let error = error{
+                
+                return complete(nil, error)
+            }
+            
+            
+
+            return complete(file, nil)
+            
+        }
+        
+    }
+    
+    
+    
     func storageUpload(filename: String, data: Data, meta: StorageMetadata?, complete: @escaping (_ downloadURL: String?, _ error: Error?) -> Void){
         
         guard let userId = self.getCurrentUserId() else {

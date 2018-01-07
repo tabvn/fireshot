@@ -20,7 +20,7 @@ class Shot{
     var url:String!
     let uid: String!
     let timestamp: Double!
-    let type: String!
+    var type: String!
     
     init(title: String!, file: String, type: String, url: String, uid: String, id: String?, timestamp: Double?) {
         
@@ -50,6 +50,11 @@ class Shot{
     }
     func setDownloadUrl(urlString: String){
         self.url = urlString
+    }
+    
+    func setType(type: String){
+        
+        self.type = type
     }
 
     
