@@ -11,7 +11,7 @@ import Cocoa
 class FileDropView: NSView {
 
     var filePath: String?
-    let expectedExt = ["jpg", "jpeg", "JPG", "png", "txt", "doc", "docx", "html", "pdf", "xls", "xlsx"]
+   
     
     var fs: Fireshot! = nil
     

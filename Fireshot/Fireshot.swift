@@ -21,7 +21,7 @@ class Fireshot {
     private var popover: NSPopover!
     private var activeVC: NSViewController!
 
-    let expectedExt = ["jpg", "jpeg", "JPG", "png", "txt", "doc", "docx", "html", "pdf", "xls", "xlsx"]
+    let expectedExt = ["jpg", "jpeg", "JPG", "png", "txt", "doc", "docx", "html", "pdf", "xls", "xlsx", "json", "zip", "gz", "tar.gz", "plist", "js", "ico", "psd", "csv"]
     
     var mainTable: NSTableView! = nil
     
