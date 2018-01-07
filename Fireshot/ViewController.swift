@@ -16,7 +16,9 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     let viewHeight: CGFloat = 250
     
     var selected: Shot! = nil
+    var commandKeyPressed: Bool = false
     
+    // Menu options for select shot/copy/delete  ...
     
     lazy var shotCellMenu: NSMenu = {
         
@@ -70,7 +72,9 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         let sv = NSScrollView()
         
         sv.translatesAutoresizingMaskIntoConstraints = false
+        sv.wantsLayer = true
         
+        sv.layer?.backgroundColor = CGColor(red: 255, green: 255, blue: 255, alpha: 0.8)
         return sv
         
     }()
@@ -266,19 +270,19 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         
         selectButton.leftAnchor.constraint(equalTo: header.leftAnchor, constant: 10).isActive = true
         selectButton.topAnchor.constraint(equalTo: header.topAnchor, constant: 5).isActive = true
-        selectButton.widthAnchor.constraint(equalToConstant: 20).isActive = true
-        selectButton.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        selectButton.widthAnchor.constraint(equalToConstant: 15).isActive = true
+        selectButton.heightAnchor.constraint(equalToConstant: 15).isActive = true
         
         addButton.leftAnchor.constraint(equalTo: selectButton.rightAnchor, constant: 10).isActive = true
         addButton.topAnchor.constraint(equalTo: header.topAnchor, constant: 5).isActive = true
-        addButton.widthAnchor.constraint(equalToConstant: 20).isActive = true
-        addButton.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        addButton.widthAnchor.constraint(equalToConstant: 15).isActive = true
+        addButton.heightAnchor.constraint(equalToConstant: 15).isActive = true
         
         header.addSubview(configButton)
         configButton.topAnchor.constraint(equalTo: header.topAnchor, constant: 5).isActive = true
         configButton.rightAnchor.constraint(equalTo: header.rightAnchor, constant: -10).isActive = true
-        configButton.widthAnchor.constraint(equalToConstant: 20).isActive = true
-        configButton.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        configButton.widthAnchor.constraint(equalToConstant: 15).isActive = true
+        configButton.heightAnchor.constraint(equalToConstant: 15).isActive = true
         
         
         tableView.delegate = self
@@ -334,7 +338,33 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     }
     
     func tableView(_ tableView: NSTableView, shouldSelectRow row: Int) -> Bool {
+        
         return false
+    }
+    
+    override func keyDown(with event: NSEvent) {
+        
+        // v bind paste event
+        
+        if event.keyCode == 9 && self.commandKeyPressed == true{
+
+            // do paste event
+            self.fs.pasteFromClipboard()
+        }
+    }
+    override func flagsChanged(with event: NSEvent) {
+        
+        let flagEvent = event.modifierFlags.intersection(NSEvent.ModifierFlags.deviceIndependentFlagsMask)
+        
+       
+        if flagEvent == .command{
+           
+            self.commandKeyPressed = true
+        }
+        else{
+            
+            self.commandKeyPressed = false
+        }
     }
     
     

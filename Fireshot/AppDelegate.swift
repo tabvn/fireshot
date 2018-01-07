@@ -24,6 +24,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
        
         // Setup Firebase
       
+        popover.behavior = .transient
         FirebaseApp.configure()
         fs = Fireshot()
      
@@ -49,6 +50,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
         // Insert code here to tear down your application
     }
 
+    
 
 }
 

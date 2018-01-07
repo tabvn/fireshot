@@ -109,7 +109,7 @@ class Fireshot {
            return
         }
         
-        let shot = Shot(file: "", url: "", uid: userId, id: nil, timestamp: nil)
+        let shot = Shot(title: html ? "Html from Clipboard" : "Plain Text from Clipboard", file: "", type: html ? "text/html" : "text/plain", url: "", uid: userId, id: nil, timestamp: nil)
         var filename: String!
         
         
@@ -135,13 +135,15 @@ class Fireshot {
 
         if let data = data{
             
+            self.changeMenuImage(imageName: "cloud_upload")
+            
             self.storageUpload(filename: filename, data: data, meta: meta, complete: { (url, error) in
                 
                 guard let url = url else  {
                     
                     return
                 }
-                
+                self.changeMenuImage(imageName: "cloud")
                 self.copyToClipboard(text: url)
                 self.showNotification(title: "Clipboard content saved", text: "URl of your content has been copied to your clipboard.", image: data)
                 
@@ -209,12 +211,26 @@ class Fireshot {
         
         ref.child(userId).queryLimited(toLast: 10).observe(DataEventType.childAdded) { (snapshot: DataSnapshot) in
             
+            
             let data: [String: Any] = snapshot.value as! [String : Any]
             guard let timestamp: Double = data["timestamp"] as? Double, let id: String = snapshot.key as String? , let file: String = (data["file"] as? String), let url: String = (data["url"] as? String), let userId: String = data["uid"] as? String else{
                 
                 return
             }
-            let shot = Shot(file: file, url: url, uid: userId, id: id, timestamp: timestamp)
+            
+            var title: String = file
+            var type: String = "unknown"
+            
+            if let _title: String = data["title"] as? String{
+                
+                title = _title
+            }
+            if let _type: String = data["type"] as? String{
+                
+                type = _type
+            }
+            
+            let shot = Shot(title: title , file: file, type: type, url: url, uid: userId, id: id, timestamp: timestamp)
 
             
             self.shots.insert(shot, at: 0)
@@ -346,6 +362,11 @@ class Fireshot {
         
         
     }
+    func changeMenuImage(imageName: String){
+        
+        let cloudImage = NSImage(named: NSImage.Name(imageName))
+        self.menuButton.image = cloudImage
+    }
     func saveScreenshot(destination:String!){
         
         guard let userId = self.getCurrentUserId() else {
@@ -357,7 +378,7 @@ class Fireshot {
         if file.fileExists(atPath: destination){
             
             // file is exist
-            
+            self.changeMenuImage(imageName: "cloud_upload")
             let fileData: Data = file.contents(atPath: destination)!
             // upload this file data to FIrebase Storage
             
@@ -373,9 +394,8 @@ class Fireshot {
                 print("An error delete file", destination)
             }
             
-            let cloudImage = NSImage(named: NSImage.Name("cloud_upload"))
-            self.menuButton.image = cloudImage
-            let shot = Shot(file: "", url: "", uid: userId, id: nil, timestamp: nil)
+            
+            let shot = Shot(title: "Screen Shot", file: "", type: "image/png", url: "", uid: userId, id: nil, timestamp: nil)
             let filename = shot.id + ".png"
             shot.setFilename(name: filename)
             
@@ -386,7 +406,7 @@ class Fireshot {
                 
                 // delete file
                 
-                self.menuButton.image = NSImage(named: NSImage.Name("cloud"))
+                self.changeMenuImage(imageName: "cloud")
                 
                 if let error = error{
                     

@@ -15,12 +15,14 @@ class Shot{
     
     private var ref: DatabaseReference!
     let id: String!
+    let title: String!
     var file:String!
     var url:String!
     let uid: String!
     let timestamp: Double!
+    let type: String!
     
-    init(file: String, url: String, uid: String, id: String?, timestamp: Double?) {
+    init(title: String!, file: String, type: String, url: String, uid: String, id: String?, timestamp: Double?) {
         
         self.ref = Database.database().reference(withPath: "shots")
         if id == nil{
@@ -34,7 +36,9 @@ class Shot{
         }else{
             self.timestamp = timestamp
         }
+        self.title = title
         self.file = file
+        self.type = type
         self.url = url
         self.uid = uid
         
@@ -60,6 +64,8 @@ class Shot{
     func save(){
         
         let shot: [String: Any] = [
+            "title": self.title,
+            "type": self.type,
             "file": self.file,
             "url": self.url,
             "uid": self.uid,
