@@ -8,13 +8,13 @@
 
 import Cocoa
 
-class LoginViewController: NSViewController {
+class LoginViewController: NSViewController, NSTextFieldDelegate {
 
     var fs: Fireshot! = nil
     private var messageAdded: Bool = false
     
     let viewWidth: CGFloat = 250
-    let viewHeight: CGFloat = 180
+    let viewHeight: CGFloat = 160
     let headerLine:NSView = {
         
         let box = NSView()
@@ -46,6 +46,19 @@ class LoginViewController: NSViewController {
         return label
     }()
     
+    let formView: NSView = {
+        
+        
+        let view = NSView()
+        
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.wantsLayer = true
+        view.layer?.backgroundColor = CGColor.white
+        
+        return view
+        
+    }()
+    
     let emailTextfield: NSTextField = {
         
         let tf = NSTextField()
@@ -57,6 +70,8 @@ class LoginViewController: NSViewController {
     
         tf.translatesAutoresizingMaskIntoConstraints = false
         tf.placeholderString = "Email"
+        tf.tag = 0
+        tf.sendAction(on: NSEvent.EventTypeMask.mouseEntered)
         
         return tf
     }()
@@ -72,6 +87,8 @@ class LoginViewController: NSViewController {
         
         tf.translatesAutoresizingMaskIntoConstraints = false
         tf.placeholderString = "Password"
+        tf.tag = 1
+        tf.sendAction(on: NSEvent.EventTypeMask.mouseEntered)
         
         return tf
     }()
@@ -155,13 +172,10 @@ class LoginViewController: NSViewController {
         
 
         
-        view.addSubview(emailTextfield)
-        view.addSubview(passwordTextField)
         
-        view.addSubview(button)
-        view.addSubview(quitButton)
         
-        let parentView: NSView = view
+       emailTextfield.delegate = self
+       passwordTextField.delegate = self
         
         view.addSubview(header)
         view.addSubview(headerLine)
@@ -189,6 +203,21 @@ class LoginViewController: NSViewController {
         titleLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
         titleLabel.rightAnchor.constraint(equalTo: header.rightAnchor, constant: 0).isActive = true
         
+        
+        view.addSubview(formView)
+        formView.topAnchor.constraint(equalTo: headerLine.bottomAnchor, constant: 0).isActive = true
+        formView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0).isActive = true
+        formView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
+        formView.rightAnchor.constraint(equalTo: headerLine.rightAnchor, constant: 0).isActive = true
+        
+        
+        formView.addSubview(emailTextfield)
+        formView.addSubview(passwordTextField)
+        
+        formView.addSubview(button)
+        formView.addSubview(quitButton)
+        
+         let parentView: NSView = formView
         emailTextfield.topAnchor.constraint(equalTo:headerLine.bottomAnchor, constant: 20).isActive = true
         emailTextfield.leftAnchor.constraint(equalTo:parentView.leftAnchor, constant: 10).isActive = true
         emailTextfield.heightAnchor.constraint(equalToConstant: 25).isActive = true
@@ -215,8 +244,8 @@ class LoginViewController: NSViewController {
         
         
         
-        self.emailTextfield.layer?.borderColor = CGColor(red: 255, green: 0, blue: 0, alpha: 1)
-        self.passwordTextField.layer?.borderColor = CGColor(red: 255, green: 0, blue: 0, alpha: 1)
+        self.emailTextfield.layer?.borderColor = CGColor(red: 255, green: 0, blue: 0, alpha: 0.5)
+        self.passwordTextField.layer?.borderColor = CGColor(red: 255, green: 0, blue: 0, alpha: 0.5)
         
         
         
@@ -227,10 +256,38 @@ class LoginViewController: NSViewController {
         self.emailTextfield.layer?.borderColor = CGColor(red: 0, green: 0, blue: 0, alpha: 0.05)
         self.passwordTextField.layer?.borderColor = CGColor(red: 0, green: 0, blue: 0, alpha: 0.05)
         
-        
-       
+      
       
     }
+    override func controlTextDidEndEditing(_ obj: Notification) {
+       
+        if let tf: NSTextField = obj.object as? NSTextField{
+            
+            if tf.tag == 1{
+                
+                
+                guard let email: String? = self.emailTextfield.stringValue, let password: String? = self.passwordTextField.stringValue else {
+                    return
+                }
+                
+                if password != "" && email != ""{
+                    self.submit()
+                }
+                
+            }
+        }
+        
+       
+        
+        
+    }
+    
+    
+    
+    func control(_ control: NSControl, textShouldEndEditing fieldEditor: NSText) -> Bool {
+        return true
+    }
+    
     
     
 }
