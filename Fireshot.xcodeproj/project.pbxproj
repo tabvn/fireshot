@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5431517D2000568A000FD237 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5431517C2000568A000FD237 /* GoogleService-Info.plist */; };
 		544430791FFE11EC0072BDF7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 544430781FFE11EC0072BDF7 /* AppDelegate.swift */; };
 		5444307D1FFE11EC0072BDF7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5444307C1FFE11EC0072BDF7 /* Assets.xcassets */; };
 		544430801FFE11EC0072BDF7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5444307E1FFE11EC0072BDF7 /* Main.storyboard */; };
@@ -18,12 +17,14 @@
 		548972B81FFF779C00E8416B /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 548972B61FFF779C00E8416B /* ViewController.xib */; };
 		548972BA1FFF926D00E8416B /* shotTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 548972B91FFF926D00E8416B /* shotTableCell.swift */; };
 		54F0C9481FFE199600903D77 /* Shot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54F0C9471FFE199600903D77 /* Shot.swift */; };
+		54FB46912001EF6F00DB5248 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 54FB46902001EF6F00DB5248 /* GoogleService-Info.plist */; };
+		54FB46972001F5A600DB5248 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54FB46952001F5A600DB5248 /* RegisterViewController.swift */; };
+		54FB46982001F5A600DB5248 /* RegisterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 54FB46962001F5A600DB5248 /* RegisterViewController.xib */; };
 		7ADB58EE64F59C3E776FFF06 /* Pods_Fireshot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D06FACEB83A8E4A86587D66F /* Pods_Fireshot.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		501EAC7BB48244269C034075 /* Pods-Fireshot.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Fireshot.release.xcconfig"; path = "Pods/Target Support Files/Pods-Fireshot/Pods-Fireshot.release.xcconfig"; sourceTree = "<group>"; };
-		5431517C2000568A000FD237 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		544430751FFE11EC0072BDF7 /* Fireshot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Fireshot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		544430781FFE11EC0072BDF7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5444307C1FFE11EC0072BDF7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -37,6 +38,9 @@
 		548972B61FFF779C00E8416B /* ViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ViewController.xib; sourceTree = "<group>"; };
 		548972B91FFF926D00E8416B /* shotTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = shotTableCell.swift; sourceTree = "<group>"; };
 		54F0C9471FFE199600903D77 /* Shot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shot.swift; sourceTree = "<group>"; };
+		54FB46902001EF6F00DB5248 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		54FB46952001F5A600DB5248 /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
+		54FB46962001F5A600DB5248 /* RegisterViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RegisterViewController.xib; sourceTree = "<group>"; };
 		D06FACEB83A8E4A86587D66F /* Pods_Fireshot.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Fireshot.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F353F1C0F0F7E5512501F8D4 /* Pods-Fireshot.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Fireshot.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Fireshot/Pods-Fireshot.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -83,17 +87,14 @@
 		544430771FFE11EC0072BDF7 /* Fireshot */ = {
 			isa = PBXGroup;
 			children = (
+				54FB46942001F0B200DB5248 /* view */,
+				54FB46932001F09700DB5248 /* controller */,
+				54FB46922001F07400DB5248 /* layout */,
 				54F0C9461FFE198700903D77 /* model */,
 				544430781FFE11EC0072BDF7 /* AppDelegate.swift */,
 				5444308A1FFE13F50072BDF7 /* Fireshot.swift */,
-				548972B11FFF5FCC00E8416B /* LoginViewController.swift */,
-				548972B21FFF5FCC00E8416B /* LoginViewController.xib */,
-				548972B51FFF779C00E8416B /* ViewController.swift */,
-				548972B91FFF926D00E8416B /* shotTableCell.swift */,
-				548972B61FFF779C00E8416B /* ViewController.xib */,
 				5444307C1FFE11EC0072BDF7 /* Assets.xcassets */,
-				5444307E1FFE11EC0072BDF7 /* Main.storyboard */,
-				5431517C2000568A000FD237 /* GoogleService-Info.plist */,
+				54FB46902001EF6F00DB5248 /* GoogleService-Info.plist */,
 				544430811FFE11EC0072BDF7 /* Info.plist */,
 				544430821FFE11EC0072BDF7 /* Fireshot.entitlements */,
 			);
@@ -114,6 +115,35 @@
 				54F0C9471FFE199600903D77 /* Shot.swift */,
 			);
 			path = model;
+			sourceTree = "<group>";
+		};
+		54FB46922001F07400DB5248 /* layout */ = {
+			isa = PBXGroup;
+			children = (
+				54FB46962001F5A600DB5248 /* RegisterViewController.xib */,
+				548972B21FFF5FCC00E8416B /* LoginViewController.xib */,
+				5444307E1FFE11EC0072BDF7 /* Main.storyboard */,
+				548972B61FFF779C00E8416B /* ViewController.xib */,
+			);
+			path = layout;
+			sourceTree = "<group>";
+		};
+		54FB46932001F09700DB5248 /* controller */ = {
+			isa = PBXGroup;
+			children = (
+				548972B11FFF5FCC00E8416B /* LoginViewController.swift */,
+				548972B51FFF779C00E8416B /* ViewController.swift */,
+				54FB46952001F5A600DB5248 /* RegisterViewController.swift */,
+			);
+			path = controller;
+			sourceTree = "<group>";
+		};
+		54FB46942001F0B200DB5248 /* view */ = {
+			isa = PBXGroup;
+			children = (
+				548972B91FFF926D00E8416B /* shotTableCell.swift */,
+			);
+			path = view;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -188,9 +218,10 @@
 			files = (
 				548972B81FFF779C00E8416B /* ViewController.xib in Resources */,
 				548972B41FFF5FCC00E8416B /* LoginViewController.xib in Resources */,
-				5431517D2000568A000FD237 /* GoogleService-Info.plist in Resources */,
+				54FB46912001EF6F00DB5248 /* GoogleService-Info.plist in Resources */,
 				5444307D1FFE11EC0072BDF7 /* Assets.xcassets in Resources */,
 				544430801FFE11EC0072BDF7 /* Main.storyboard in Resources */,
+				54FB46982001F5A600DB5248 /* RegisterViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -261,6 +292,7 @@
 			files = (
 				548972B71FFF779C00E8416B /* ViewController.swift in Sources */,
 				548972B31FFF5FCC00E8416B /* LoginViewController.swift in Sources */,
+				54FB46972001F5A600DB5248 /* RegisterViewController.swift in Sources */,
 				5444308B1FFE13F50072BDF7 /* Fireshot.swift in Sources */,
 				544430791FFE11EC0072BDF7 /* AppDelegate.swift in Sources */,
 				548972BA1FFF926D00E8416B /* shotTableCell.swift in Sources */,

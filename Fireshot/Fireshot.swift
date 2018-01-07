@@ -13,12 +13,14 @@ import FirebaseDatabase
 
 class Fireshot {
     
-    private var ref = Storage.storage().reference(withPath: "shots")
+    private var storageRef = Storage.storage().reference(withPath: "shots")
+    private let ref: DatabaseReference = Database.database().reference(withPath: "shots")
     private var tempDir: String!
     private var currentUser: User?
     private var menuButton: NSButton!
     private var popover: NSPopover!
     private var activeVC: NSViewController!
+
     
     var mainTable: NSTableView! = nil
     
@@ -27,6 +29,7 @@ class Fireshot {
     
     init(){
         
+
         if let _ = self.getCurrentUser(){
             let mainVC = ViewController()
             mainVC.fs = self
@@ -40,9 +43,20 @@ class Fireshot {
         
         
         self.tempDir = NSTemporaryDirectory()
+        
+        
         self.onShotAdded()
     }
     
+    
+    func pushViewController(from: NSViewController, destination: NSViewController){
+        
+ 
+    
+        self.popover.contentViewController = destination
+        self.popover.show(relativeTo: self.menuButton.bounds, of: self.menuButton, preferredEdge: NSRectEdge.minY)
+
+    }
     func getShots() -> [Shot] {
         return self.shots
     }
@@ -165,7 +179,7 @@ class Fireshot {
             
             return complete(nil, nil)
         }
-        ref.child(userId).child(filename).putData(data, metadata: meta) { (file, error) in
+        storageRef.child(userId).child(filename).putData(data, metadata: meta) { (file, error) in
             
             if let error = error{
                 
@@ -198,16 +212,19 @@ class Fireshot {
         
     }
     func onShotAdded(){
-        
+
         guard let _ = self.getCurrentUser() else {
             return
         }
-        let ref = Database.database().reference(withPath: "shots")
+        
+       
         
        
         guard let userId = self.getCurrentUserId() else {
             return
         }
+        
+        
         
         ref.child(userId).queryLimited(toLast: 10).observe(DataEventType.childAdded) { (snapshot: DataSnapshot) in
             
@@ -290,6 +307,23 @@ class Fireshot {
             self.currentUser = _user
             self.onShotAdded()
             return completion(_user, nil)
+        }
+        
+    }
+    
+    func register(email: String, password: String, completion: @escaping (_ user: User?, _ error: Error?) -> Void){
+        
+        self.signOut()
+        
+        Auth.auth().createUser(withEmail: email, password: password) { (user, error) in
+            
+            if let error = error{
+                
+                return completion(nil, error)
+            }
+            
+            return completion(user, error)
+            
         }
         
     }
@@ -402,7 +436,7 @@ class Fireshot {
         
             
             
-            ref.child(userId).child(filename).putData(fileData, metadata: metaData, completion: { (storeMetaData, error) in
+            storageRef.child(userId).child(filename).putData(fileData, metadata: metaData, completion: { (storeMetaData, error) in
                 
                 // delete file
                 
@@ -479,6 +513,9 @@ class Fireshot {
     }
     func signOut(){
         
+        self.shots.removeAll()
+        self.ref.removeAllObservers()
+        
         do{
             try Auth.auth().signOut()
         }
@@ -495,6 +532,7 @@ class Fireshot {
     
     func tooglePopover(){
         
+
         if self.popover.isShown{
             
             self.popover.close()

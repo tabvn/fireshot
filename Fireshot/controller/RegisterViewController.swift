@@ -1,14 +1,15 @@
 //
-//  LoginViewController.swift
+//  RegisterViewController.swift
 //  Fireshot
 //
-//  Created by Toan Nguyen Dinh on 1/5/18.
+//  Created by Toan Nguyen Dinh on 1/7/18.
 //  Copyright © 2018 Toan Nguyen Dinh. All rights reserved.
 //
 
 import Cocoa
+import FirebaseDatabase
 
-class LoginViewController: NSViewController, NSTextFieldDelegate {
+class RegisterViewController: NSViewController, NSTextFieldDelegate {
 
     var fs: Fireshot! = nil
     private var messageAdded: Bool = false
@@ -37,7 +38,7 @@ class LoginViewController: NSViewController, NSTextFieldDelegate {
     
     let titleLabel: NSTextField = {
         
-       let label = NSTextField(labelWithString: "Sign In")
+        let label = NSTextField(labelWithString: "Create an Account")
         label.font = NSFont.systemFont(ofSize: 14)
         label.textColor = NSColor(red: 0, green: 0, blue: 0, alpha: 0.8)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -66,8 +67,9 @@ class LoginViewController: NSViewController, NSTextFieldDelegate {
         tf.wantsLayer = true
         tf.isBordered = false
         tf.layer?.borderWidth = 1
-        tf.layer?.borderColor = CGColor(red: 0, green: 0, blue: 0, alpha: 0.1)
-    
+        tf.layer?.cornerRadius = 0
+        tf.layer?.borderColor = CGColor(red: 0, green: 0, blue: 0, alpha: 0.3)
+        
         tf.translatesAutoresizingMaskIntoConstraints = false
         tf.placeholderString = "Email"
         tf.tag = 0
@@ -82,38 +84,73 @@ class LoginViewController: NSViewController, NSTextFieldDelegate {
         tf.wantsLayer = true
         tf.isBordered = false
         tf.layer?.borderWidth = 1
-        tf.layer?.borderColor = CGColor(red: 0, green: 0, blue: 0, alpha: 0.1)
-        
+        tf.layer?.borderColor = CGColor(red: 0, green: 0, blue: 0, alpha: 0.3)
+        tf.layer?.cornerRadius = 0
         
         tf.translatesAutoresizingMaskIntoConstraints = false
         tf.placeholderString = "Password"
         tf.tag = 1
         tf.sendAction(on: NSEvent.EventTypeMask.mouseEntered)
         
+        
         return tf
     }()
     
     lazy var button: NSButton = {
         
-        let btn = NSButton(title: "Sign In", target: self, action: #selector(self.submit))
+        let button = NSButton(title: "Create an account", target: self, action: #selector(self.submit))
         
-        btn.translatesAutoresizingMaskIntoConstraints = false
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.wantsLayer = true
+        button.isBordered = false
+        button.layer?.borderWidth = 1
+        button.layer?.borderColor = CGColor(red: 0, green: 0, blue: 0, alpha: 0.3)
+        button.layer?.cornerRadius = 0
         
         
-        return btn
-    }()
-    
-    lazy var quitButton: NSButton = {
-        
-        let btn = NSButton(title: "Quit", target: self, action: #selector(self.quit))
-        
-        btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.isBordered = false
-        btn.setAccessibilityIndex(2)
-        return btn
+        return button
     }()
     
     
+    
+    lazy var mainMenu: NSMenu = {
+        
+        let menu = NSMenu()
+        
+        menu.addItem(withTitle: "Sign In", action: #selector(self.login), keyEquivalent: "")
+        menu.addItem(withTitle: "Quit Fireshot", action: #selector(self.quit), keyEquivalent: "")
+        
+        return menu
+        
+    }()
+    lazy var configButton: NSButton = {
+        let image = NSImage(named: NSImage.Name("config"))
+        let button = NSButton(image: image!, target: self, action: #selector(self.openMenu))
+        button.isBordered = false
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.imageScaling = .scaleAxesIndependently
+        button.isTransparent = true
+        
+        return button
+    }()
+    
+    @objc func login(){
+        
+        
+        let loginVC = LoginViewController()
+        
+        loginVC.fs = self.fs
+        
+        self.fs.pushViewController(from: self, destination: loginVC)
+        
+    }
+    @objc func openMenu(sender: NSButton){
+        
+        
+        let p: NSPoint = NSPoint(x: sender.frame.origin.x, y: sender.frame.origin.y - (sender.frame.height/2))
+        self.mainMenu.popUp(positioning: nil, at: p, in: sender.superview)
+        
+    }
     @objc func quit(){
         
         NSApplication.shared.terminate(self)
@@ -123,7 +160,7 @@ class LoginViewController: NSViewController, NSTextFieldDelegate {
         self.removeMessage()
         
         if let _ = fs.getCurrentUserId(){
-           
+            
             fs.signOut()
         }
         
@@ -135,24 +172,41 @@ class LoginViewController: NSViewController, NSTextFieldDelegate {
         self.button.title = "Please wait..."
         self.button.isEnabled = false
         
-   
-        fs.auth(email: email, password: password) { (user, error) in
+        
+        fs.register(email: email, password: password) { (user, error) in
             
-            self.button.title = "Sign In"
+            self.button.title = "Create an account"
             self.button.isEnabled = true
             if let _ = error{
-                
-                
-               
-                self.addMessage(text: "Login Error, Try again!")
+ 
+                self.addMessage(text: "Register Error, Try again!")
                 
                 return
             }
             
+            
+           
             self.removeMessage()
             
-            self.fs.tooglePopover()
-          
+            if let uid = user?.uid{
+                
+                let shot: Shot  = Shot(title: "Welcome to Fireshot", file: "empty.txt", type: "text/plain", url: "http://tabvn.com", uid: uid, id: nil, timestamp: nil)
+                shot.save(completion: { (error) in
+                    
+                    let deadline = DispatchTime.now() + 1
+                    
+                    DispatchQueue.main.asyncAfter(deadline: deadline, execute: {
+                        self.fs.tooglePopover()
+                        self.fs.onShotAdded()
+                    })
+                    
+                })
+               
+                
+            }
+           
+            
+            
             
         }
         
@@ -160,22 +214,17 @@ class LoginViewController: NSViewController, NSTextFieldDelegate {
     
 
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-    
+        
         // Do view setup here.
         view.widthAnchor.constraint(equalToConstant: viewWidth).isActive = true
         view.heightAnchor.constraint(equalToConstant: viewHeight).isActive = true
         
-        view.addSubview(titleLabel)
-        
-
-        
-        
-        
-       emailTextfield.delegate = self
-       passwordTextField.delegate = self
+        emailTextfield.delegate = self
+        passwordTextField.delegate = self
         
         view.addSubview(header)
         view.addSubview(headerLine)
@@ -197,11 +246,21 @@ class LoginViewController: NSViewController, NSTextFieldDelegate {
         headerLine.widthAnchor.constraint(equalToConstant: viewWidth).isActive = true
         
         
+        header.addSubview(configButton)
+        
+        configButton.rightAnchor.constraint(equalTo: header.rightAnchor, constant: -10).isActive = true
+        configButton.topAnchor.constraint(equalTo: header.topAnchor, constant: 5).isActive = true
+        configButton.widthAnchor.constraint(equalToConstant: 15).isActive = true
+        configButton.heightAnchor.constraint(equalToConstant: 15).isActive = true
+        
+        
+        header.addSubview(titleLabel)
         
         titleLabel.topAnchor.constraint(equalTo: header.topAnchor, constant: 5).isActive = true
         titleLabel.leftAnchor.constraint(equalTo:header.leftAnchor, constant: 10).isActive = true
         titleLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        titleLabel.rightAnchor.constraint(equalTo: header.rightAnchor, constant: 0).isActive = true
+        titleLabel.rightAnchor.constraint(equalTo: configButton.leftAnchor, constant: 0).isActive = true
+        
         
         
         view.addSubview(formView)
@@ -215,9 +274,9 @@ class LoginViewController: NSViewController, NSTextFieldDelegate {
         formView.addSubview(passwordTextField)
         
         formView.addSubview(button)
-        formView.addSubview(quitButton)
         
-         let parentView: NSView = formView
+        
+        let parentView: NSView = formView
         emailTextfield.topAnchor.constraint(equalTo:headerLine.bottomAnchor, constant: 20).isActive = true
         emailTextfield.leftAnchor.constraint(equalTo:parentView.leftAnchor, constant: 10).isActive = true
         emailTextfield.heightAnchor.constraint(equalToConstant: 25).isActive = true
@@ -231,17 +290,15 @@ class LoginViewController: NSViewController, NSTextFieldDelegate {
         
         button.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 10).isActive = true
         button.leftAnchor.constraint(equalTo:parentView.leftAnchor, constant: 10).isActive = true
+        button.rightAnchor.constraint(equalTo: parentView.rightAnchor, constant: -10).isActive = true
         button.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        quitButton.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 5).isActive = true
-        quitButton.rightAnchor.constraint(equalTo:parentView.rightAnchor, constant: -10).isActive = true
+        
         
         
     }
     
     
     func addMessage(text: String){
-        let parentView = self.view
-        
         
         
         self.emailTextfield.layer?.borderColor = CGColor(red: 255, green: 0, blue: 0, alpha: 0.5)
@@ -256,19 +313,17 @@ class LoginViewController: NSViewController, NSTextFieldDelegate {
         self.emailTextfield.layer?.borderColor = CGColor(red: 0, green: 0, blue: 0, alpha: 0.05)
         self.passwordTextField.layer?.borderColor = CGColor(red: 0, green: 0, blue: 0, alpha: 0.05)
         
-      
-      
+        
+        
     }
     override func controlTextDidEndEditing(_ obj: Notification) {
-       
+        
         if let tf: NSTextField = obj.object as? NSTextField{
             
             if tf.tag == 1{
                 
-                
-                guard let email: String? = self.emailTextfield.stringValue, let password: String? = self.passwordTextField.stringValue else {
-                    return
-                }
+                let email: String = emailTextfield.stringValue
+                let password: String = passwordTextField.stringValue
                 
                 if password != "" && email != ""{
                     self.submit()
@@ -277,7 +332,7 @@ class LoginViewController: NSViewController, NSTextFieldDelegate {
             }
         }
         
-       
+        
         
         
     }
@@ -287,7 +342,5 @@ class LoginViewController: NSViewController, NSTextFieldDelegate {
     func control(_ control: NSControl, textShouldEndEditing fieldEditor: NSText) -> Bool {
         return true
     }
-    
-    
     
 }

@@ -82,6 +82,27 @@ class Shot{
             
         }
     }
+    
+    func save(completion: @escaping (_ error: Error?)->Void){
+        
+        let shot: [String: Any] = [
+            "title": self.title,
+            "type": self.type,
+            "file": self.file,
+            "url": self.url,
+            "uid": self.uid,
+            "timestamp": self.timestamp
+        ]
+        
+        // save to firebase db
+        
+        self.ref.child(self.uid).child(self.id).setValue(shot) { (error, databaseRef) in
+            
+          
+            return completion(error)
+            
+        }
+    }
 }
 
 
