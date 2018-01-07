@@ -21,7 +21,7 @@ class Shot{
     let uid: String!
     let timestamp: Double!
     var type: String!
-    
+   
     init(title: String!, file: String, type: String, url: String, uid: String, id: String?, timestamp: Double?) {
         
         self.ref = Database.database().reference(withPath: "shots")

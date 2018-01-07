@@ -21,6 +21,7 @@ class Fireshot {
     private var popover: NSPopover!
     private var activeVC: NSViewController!
 
+    let expectedExt = ["jpg", "jpeg", "JPG", "png", "txt", "doc", "docx", "html", "pdf", "xls", "xlsx"]
     
     var mainTable: NSTableView! = nil
     
@@ -61,6 +62,17 @@ class Fireshot {
         return self.shots
     }
     
+    func extensitionAllowed(url: URL) -> Bool{
+        
+        let suffix = url.pathExtension
+        for ext in self.expectedExt {
+            if ext.lowercased() == suffix {
+                return true
+            }
+        }
+        return false
+    }
+    
     func pasteFromClipboard(){
         
        
@@ -74,7 +86,61 @@ class Fireshot {
             
         case "public.file-url":
             
-           // feature for file upload from clipboard
+            let pasteboard = NSPasteboard.general.propertyList(forType: NSPasteboard.PasteboardType(rawValue: "NSFilenamesPboardType"))
+            guard let fileItems: NSArray = pasteboard as? NSArray else{
+                
+                return
+            }
+            
+            for item in fileItems{
+                let filePath = item as! String
+                let fileUrl: URL = NSURL(fileURLWithPath: filePath) as URL
+                
+                if self.extensitionAllowed(url: fileUrl){
+                    
+                    
+                    let filename = fileUrl.lastPathComponent
+                    guard let userId = self.getCurrentUserId() else{
+                        return
+                    }
+                    let shot: Shot = Shot(title: filename, file: filename, type: "file", url: "", uid: userId, id: nil, timestamp: nil)
+                    
+                    let fileNametoSave = shot.id + filename
+                    self.changeMenuImage(imageName: "cloud_upload")
+                    self.storageUploadFileUrl(filename: fileNametoSave, url: fileUrl, meta: nil, complete: { (file, error) in
+                        
+                        self.changeMenuImage(imageName: "cloud")
+                        
+                        if error == nil && file != nil{
+                            shot.setFilename(name: fileNametoSave)
+                            
+                            guard let downloadUrl = file?.downloadURL()?.absoluteString, let fileType = file?.contentType else{
+                                
+                                return
+                            }
+                            shot.setType(type: fileType)
+                            shot.setDownloadUrl(urlString: downloadUrl)
+                            shot.save()
+                            
+                            self.showNotification(title: "Fireshot", text: "\(filename) uploaded successfuly", image: nil)
+                        }
+                        
+                    })
+                    
+                }
+                
+                
+                
+                
+            }
+            
+           
+            
+
+            
+            
+            
+            
             break
             
         case "public.utf8-plain-text":

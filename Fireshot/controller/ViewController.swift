@@ -181,6 +181,8 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         
     }()
     override func viewDidLoad() {
+        
+        
         super.viewDidLoad()
         
         setupView()
@@ -277,7 +279,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         header.leftAnchor.constraint(equalTo: dropView.leftAnchor, constant: 0).isActive = true
         header.rightAnchor.constraint(equalTo: dropView.rightAnchor, constant: 0).isActive = true
         header.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        header.widthAnchor.constraint(equalToConstant: 200).isActive = true
+        header.widthAnchor.constraint(equalToConstant: viewWidth).isActive = true
         
         
         

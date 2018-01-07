@@ -11,7 +11,7 @@ import Cocoa
 class FileDropView: NSView {
 
     var filePath: String?
-    let expectedExt = ["jpg", "png", "txt", "jpeg", "doc", "docx", "html", "pdf", "xls", "xlsx"]  //file extensions allowed for Drag&Drop (example: "jpg","png","docx", etc..)
+    let expectedExt = ["jpg", "jpeg", "JPG", "png", "txt", "doc", "docx", "html", "pdf", "xls", "xlsx"]
     
     var fs: Fireshot! = nil
     
@@ -26,6 +26,7 @@ class FileDropView: NSView {
         self.layer?.backgroundColor = NSColor.clear.cgColor
         
         registerForDraggedTypes([NSPasteboard.PasteboardType.URL, NSPasteboard.PasteboardType.fileURL])
+        
     }
     
     override func draw(_ dirtyRect: NSRect) {
@@ -48,16 +49,21 @@ class FileDropView: NSView {
         guard let board = drag.draggingPasteboard().propertyList(forType: NSPasteboard.PasteboardType(rawValue: "NSFilenamesPboardType")) as? NSArray,
             let path = board[0] as? String
             else { return false }
+    
+        return self.extensitionAllowed(url: URL(fileURLWithPath: path))
         
-        let suffix = URL(fileURLWithPath: path).pathExtension
-        for ext in self.expectedExt {
+    }
+    
+    func extensitionAllowed(url: URL) -> Bool{
+        
+        let suffix = url.pathExtension
+        for ext in self.fs.expectedExt {
             if ext.lowercased() == suffix {
                 return true
             }
         }
         return false
     }
-    
     override func draggingExited(_ sender: NSDraggingInfo?) {
         self.layer?.backgroundColor = NSColor.clear.cgColor
     }
@@ -78,33 +84,37 @@ class FileDropView: NSView {
             let filePath = item as! String
             let fileUrl: URL = NSURL(fileURLWithPath: filePath) as URL
             
-            let filename = fileUrl.lastPathComponent
-            guard let userId = self.fs.getCurrentUserId() else{
-                return true
-            }
-            let shot: Shot = Shot(title: filename, file: filename, type: "file", url: "", uid: userId, id: nil, timestamp: nil)
-            
-            let fileNametoSave = shot.id + filename
-            fs.changeMenuImage(imageName: "cloud_upload")
-            fs.storageUploadFileUrl(filename: fileNametoSave, url: fileUrl, meta: nil, complete: { (file, error) in
-           
-                self.fs.changeMenuImage(imageName: "cloud")
+            if self.extensitionAllowed(url: fileUrl){
                 
-                if error == nil && file != nil{
-                    shot.setFilename(name: fileNametoSave)
-                    
-                    guard let downloadUrl = file?.downloadURL()?.absoluteString, let fileType = file?.contentType else{
-                        
-                        return
-                    }
-                    shot.setType(type: fileType)
-                    shot.setDownloadUrl(urlString: downloadUrl)
-                    shot.save()
-                    
-                    self.fs.showNotification(title: "Fireshot", text: "\(filename) uploaded successfuly", image: nil)
+                let filename = fileUrl.lastPathComponent
+                guard let userId = self.fs.getCurrentUserId() else{
+                    return true
                 }
+                let shot: Shot = Shot(title: filename, file: filename, type: "file", url: "", uid: userId, id: nil, timestamp: nil)
                 
-            })
+                let fileNametoSave = shot.id + filename
+                fs.changeMenuImage(imageName: "cloud_upload")
+                fs.storageUploadFileUrl(filename: fileNametoSave, url: fileUrl, meta: nil, complete: { (file, error) in
+                    
+                    self.fs.changeMenuImage(imageName: "cloud")
+                    
+                    if error == nil && file != nil{
+                        shot.setFilename(name: fileNametoSave)
+                        
+                        guard let downloadUrl = file?.downloadURL()?.absoluteString, let fileType = file?.contentType else{
+                            
+                            return
+                        }
+                        shot.setType(type: fileType)
+                        shot.setDownloadUrl(urlString: downloadUrl)
+                        shot.save()
+                        
+                        self.fs.showNotification(title: "Fireshot", text: "\(filename) uploaded successfuly", image: nil)
+                    }
+                    
+                })
+            }
+            
             
            
         }
