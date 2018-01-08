@@ -107,7 +107,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         table.gridStyleMask = .solidHorizontalGridLineMask
         table.usesAlternatingRowBackgroundColors = false
         
-        
+        table.doubleAction = #selector(self.rowDoubleLick)
         
         
         
@@ -204,9 +204,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     }
     @objc func openShotLink(){
         
-        if let url = URL(string: self.selected.url), NSWorkspace.shared.open(url) {
-            fs.tooglePopover()
-        }
+        self.fs.openLink(shot: self.selected)
         
     }
     
@@ -249,6 +247,17 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         
         
     }
+    
+    @objc func rowDoubleLick(){
+        
+        let rowIndex:Int = self.tableView.clickedRow
+        let shots = fs.getShots()
+        let shot: Shot = shots[rowIndex]
+        self.fs.openLink(shot: shot)
+        
+    }
+    
+    
     @objc func signOut(){
         self.fs.signOut()
         self.fs.tooglePopover()

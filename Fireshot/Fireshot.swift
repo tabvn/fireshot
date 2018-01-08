@@ -317,6 +317,13 @@ class Fireshot {
        
         
     }
+    
+    func openLink(shot: Shot){
+        
+        if let url = URL(string: shot.url), NSWorkspace.shared.open(url) {
+            self.tooglePopover()
+        }
+    }
     func onShotAdded(){
         
         // offline detection
