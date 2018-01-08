@@ -189,7 +189,7 @@ class Fireshot {
            return
         }
         
-        let shot = Shot(title: html ? "Html from Clipboard" : "Plain Text from Clipboard", file: "", type: html ? "text/html" : "text/plain", url: "", uid: userId, id: nil, timestamp: nil)
+        let shot = Shot(title: html ? "HTML clipboard" : "Plain Text Clipboard", file: "", type: html ? "text/html" : "text/plain", url: "", uid: userId, id: nil, timestamp: nil)
         var filename: String!
         
         
@@ -225,7 +225,7 @@ class Fireshot {
                 }
                 self.changeMenuImage(imageName: "cloud")
                 self.copyToClipboard(text: url)
-                self.showNotification(title: "Clipboard content saved", text: "URl of your content has been copied to your clipboard.", image: data)
+                self.showNotification(title: "Clipboard saved successful", text: "URl of your content has been copied to your clipboard. \(filename)", image: data)
                 
                 shot.setDownloadUrl(urlString: url)
                 shot.setFilename(name: filename)
@@ -546,7 +546,7 @@ class Fireshot {
                 if let downloadUrl: String = storeMetaData?.downloadURL()?.absoluteString{
                     
                     // show notification to user
-                    self.showNotification(title: "Screenshot saved", text: "Screenshot has been copied to your clipboard.", image: fileData)
+                    self.showNotification(title: "Fireshot upload successful", text: "Screenshot has been copied to your clipboard. \(filename)", image: fileData)
                     
                     // copy to clipboard
                     
@@ -584,7 +584,9 @@ class Fireshot {
         
         let notification = NSUserNotification()
     
-        notification.title = "Fireshot"
+        
+        
+        notification.title = title
         notification.informativeText = text
         notification.soundName = NSUserNotificationDefaultSoundName
         if let image = image{
