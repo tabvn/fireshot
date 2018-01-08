@@ -58,6 +58,18 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         
     }()
     
+    @objc func recordingScreen(){
+        
+        
+        self.tooglePopover()
+        
+        let deadline = DispatchTime.now() + 3
+        DispatchQueue.main.asyncAfter(deadline: deadline) {
+           
+            self.fs.startScreenRecording()
+        }
+        
+    }
     lazy var addMenu: NSMenu = {
         
         
@@ -67,6 +79,8 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         let pasteItem = NSMenuItem(title: "Paste text from clipboard", action: #selector(self.pasteFromClipboard), keyEquivalent: "")
         pasteItem.allowsKeyEquivalentWhenHidden = true
         pasteItem.accessibilityAllowedValues()
+        menu.addItem(withTitle: "Screen Recoding", action: #selector(self.recordingScreen), keyEquivalent: "")
+       
         menu.addItem(pasteItem)
         
         return menu

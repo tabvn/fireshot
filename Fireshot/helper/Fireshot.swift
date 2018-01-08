@@ -21,7 +21,8 @@ class Fireshot {
     private var popover: NSPopover!
     private var activeVC: NSViewController!
     private var connected: Bool = false
-
+    private var recoder: ScreenRecorder?
+    
     let expectedExt = ["jpg", "jpeg", "JPG", "png", "txt", "doc", "docx", "html", "pdf", "xls", "xlsx", "json", "zip", "gz", "tar.gz", "plist", "js", "ico", "psd", "csv"]
     
     var mainTable: NSTableView! = nil
@@ -48,6 +49,69 @@ class Fireshot {
         
         
         self.onShotAdded()
+    }
+    func isRecoding()->Bool{
+        
+        if self.recoder != nil{
+            return true
+        }
+        
+        
+        return false
+    }
+    
+    
+    func startScreenRecording(){
+        
+       
+        
+        self.changeMenuImage(imageName: "recording")
+        let tmpDir = NSTemporaryDirectory()
+        
+        let timestamp = NSDate().timeIntervalSince1970
+        let path = tmpDir + "recording_\(timestamp).mp4"
+        let url = NSURL(fileURLWithPath: path)
+        let recoder: ScreenRecorder = ScreenRecorder(destination: url)
+        self.recoder = recoder
+        recoder.start()
+    }
+    func stopScreenRecoding() -> URL?{
+        
+        if let recoder = self.recoder{
+            
+            let url: URL = recoder.destinationUrl as URL
+            
+            self.changeMenuImage(imageName: "cloud_upload")
+            
+            print(url)
+            
+            let timestamp = NSDate().timeIntervalSince1970
+            let filename = "recording_\(timestamp).mp4"
+            
+            self.storageUploadFileUrl(filename: filename, url: url, meta: nil, complete: { (file, error) in
+                
+                print("video upload", file, error)
+                if let _ = error {
+                    
+                    return
+                }
+                guard let downloadUrl = file?.downloadURL()?.absoluteString, let type = file?.contentType, let userId = self.getCurrentUserId() else {
+                    return
+                }
+                
+                
+                let shot: Shot = Shot(title: "Screen recording.mp4", file: filename, type: type, url: downloadUrl, uid: userId, id: nil, timestamp: nil)
+                shot.save()
+            })
+            
+            self.recoder = nil
+            return url
+
+            
+        }
+        
+        self.recoder = nil
+        return nil
     }
     
     
@@ -678,7 +742,11 @@ class Fireshot {
     
     func tooglePopover(){
         
-
+        if self.isRecoding(){
+            
+            self.stopScreenRecoding()
+            return
+        }
         if self.popover.isShown{
             
             self.popover.close()

@@ -17,6 +17,7 @@
 		548972B71FFF779C00E8416B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 548972B51FFF779C00E8416B /* ViewController.swift */; };
 		548972B81FFF779C00E8416B /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 548972B61FFF779C00E8416B /* ViewController.xib */; };
 		548972BA1FFF926D00E8416B /* shotTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 548972B91FFF926D00E8416B /* shotTableCell.swift */; };
+		54E4221E2003721A008C68D3 /* ScreenRecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54E4221D2003721A008C68D3 /* ScreenRecoder.swift */; };
 		54F0C9481FFE199600903D77 /* Shot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54F0C9471FFE199600903D77 /* Shot.swift */; };
 		54FB46912001EF6F00DB5248 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 54FB46902001EF6F00DB5248 /* GoogleService-Info.plist */; };
 		54FB46972001F5A600DB5248 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54FB46952001F5A600DB5248 /* RegisterViewController.swift */; };
@@ -39,6 +40,7 @@
 		548972B51FFF779C00E8416B /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		548972B61FFF779C00E8416B /* ViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ViewController.xib; sourceTree = "<group>"; };
 		548972B91FFF926D00E8416B /* shotTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = shotTableCell.swift; sourceTree = "<group>"; };
+		54E4221D2003721A008C68D3 /* ScreenRecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenRecoder.swift; sourceTree = "<group>"; };
 		54F0C9471FFE199600903D77 /* Shot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shot.swift; sourceTree = "<group>"; };
 		54FB46902001EF6F00DB5248 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		54FB46952001F5A600DB5248 /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
@@ -89,12 +91,12 @@
 		544430771FFE11EC0072BDF7 /* Fireshot */ = {
 			isa = PBXGroup;
 			children = (
+				54E4221F200379A0008C68D3 /* helper */,
 				54FB46942001F0B200DB5248 /* view */,
 				54FB46932001F09700DB5248 /* controller */,
 				54FB46922001F07400DB5248 /* layout */,
 				54F0C9461FFE198700903D77 /* model */,
 				544430781FFE11EC0072BDF7 /* AppDelegate.swift */,
-				5444308A1FFE13F50072BDF7 /* Fireshot.swift */,
 				5444307C1FFE11EC0072BDF7 /* Assets.xcassets */,
 				54FB46902001EF6F00DB5248 /* GoogleService-Info.plist */,
 				544430811FFE11EC0072BDF7 /* Info.plist */,
@@ -109,6 +111,15 @@
 				D06FACEB83A8E4A86587D66F /* Pods_Fireshot.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		54E4221F200379A0008C68D3 /* helper */ = {
+			isa = PBXGroup;
+			children = (
+				54E4221D2003721A008C68D3 /* ScreenRecoder.swift */,
+				5444308A1FFE13F50072BDF7 /* Fireshot.swift */,
+			);
+			path = helper;
 			sourceTree = "<group>";
 		};
 		54F0C9461FFE198700903D77 /* model */ = {
@@ -300,6 +311,7 @@
 				544430791FFE11EC0072BDF7 /* AppDelegate.swift in Sources */,
 				5430C3E32002385A002AFCF3 /* FileDropView.swift in Sources */,
 				548972BA1FFF926D00E8416B /* shotTableCell.swift in Sources */,
+				54E4221E2003721A008C68D3 /* ScreenRecoder.swift in Sources */,
 				54F0C9481FFE199600903D77 /* Shot.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
