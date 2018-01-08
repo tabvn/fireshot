@@ -109,6 +109,13 @@ class Fireshot {
                     self.changeMenuImage(imageName: "cloud_upload")
                     self.storageUploadFileUrl(filename: fileNametoSave, url: fileUrl, meta: nil, complete: { (file, error) in
                         
+                        
+                        if let _ = error {
+                            self.changeMenuImage(imageName: "cloud_error")
+                            return
+                        }
+                        
+                        
                         self.changeMenuImage(imageName: "cloud")
                         
                         if error == nil && file != nil{
@@ -219,6 +226,11 @@ class Fireshot {
             
             self.storageUpload(filename: filename, data: data, meta: meta, complete: { (url, error) in
                 
+                if let _ = error {
+                    self.changeMenuImage(imageName: "cloud_error")
+                    return
+                }
+                
                 guard let url = url else  {
                     
                     return
@@ -251,7 +263,7 @@ class Fireshot {
         storageRef.child(userId).child(filename).putFile(from: url, metadata: meta) { (file, error) in
             
             if let error = error{
-                
+                self.changeMenuImage(imageName: "cloud_error")
                 return complete(nil, error)
             }
             
@@ -275,6 +287,7 @@ class Fireshot {
             
             if let error = error{
                 
+                self.changeMenuImage(imageName: "cloud_error")
                 return complete(nil, error)
             }
             
@@ -532,14 +545,18 @@ class Fireshot {
                 
                 // delete file
                 
-                self.changeMenuImage(imageName: "cloud")
+                
                 
                 if let error = error{
                     
                     print("An error saving shot to storage", error)
                     
+                    self.changeMenuImage(imageName: "cloud_error")
+                    return
+                    
                     
                 }
+                self.changeMenuImage(imageName: "cloud")
                 
                 
                 

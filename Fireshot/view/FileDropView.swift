@@ -96,6 +96,12 @@ class FileDropView: NSView {
                 fs.changeMenuImage(imageName: "cloud_upload")
                 fs.storageUploadFileUrl(filename: fileNametoSave, url: fileUrl, meta: nil, complete: { (file, error) in
                     
+                    if let _ = error {
+                        self.fs.changeMenuImage(imageName: "cloud_error")
+                        return
+                    }
+                    
+                    
                     self.fs.changeMenuImage(imageName: "cloud")
                     
                     if error == nil && file != nil{
