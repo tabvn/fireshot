@@ -60,6 +60,7 @@ class Shot{
     
     func delete(){
         
+        
         self.ref.child(self.uid).child(self.id).removeValue()
         Storage.storage().reference(withPath: "shots").child(self.uid).child(self.file).delete { (error) in
             

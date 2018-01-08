@@ -26,7 +26,7 @@ class Fireshot {
     
     var mainTable: NSTableView! = nil
     
-    private var shots: [Shot] = [Shot]()
+    var shots: [Shot] = [Shot]()
     
     
     init(){
@@ -385,7 +385,14 @@ class Fireshot {
             if self.mainTable != nil {
                 
                 
-                self.mainTable.reloadData()
+                DispatchQueue.main.async {
+                    
+                    let indexSet:IndexSet = NSIndexSet(index: 0) as IndexSet
+                    self.mainTable.insertRows(at: indexSet, withAnimation: NSTableView.AnimationOptions.slideDown)
+                    
+                    self.mainTable.reloadData()
+                }
+               // self.mainTable.reloadData()
             }
             
         }
@@ -398,7 +405,11 @@ class Fireshot {
             
             self.shots = result
             if self.mainTable != nil{
-                self.mainTable.reloadData()
+                
+                DispatchQueue.main.async {
+                     self.mainTable.reloadData()
+                }
+               
             }
 
         }

@@ -19,8 +19,10 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     let viewHeight: CGFloat = 250
     
     var selected: Shot! = nil
-    var selectedCell: shotTableCell! = nil
+    
     var commandKeyPressed: Bool = false
+
+    var selectedCells: [shotTableCell] = [shotTableCell]()
     
     // Menu options for select shot/copy/delete  ...
     
@@ -108,6 +110,9 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         table.usesAlternatingRowBackgroundColors = false
         
         table.doubleAction = #selector(self.rowDoubleLick)
+        table.allowsMultipleSelection = true
+        
+        
         
         
         
@@ -374,33 +379,36 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         fs.mainTable = nil
     }
     
+   
+   
     func tableViewSelectionDidChange(_ notification: Notification) {
         
-        let selectedRow = self.tableView.selectedRow
         
-        // If the user selected a row. (When no row is selected, the index is -1)
-        if self.selectedCell != nil{
-            
-            self.selectedCell.isSelected = false
-            self.selectedCell.updateLayout()
-            self.selectedCell = nil
+        
+        for selectedCell in self.selectedCells{
+            selectedCell.isSelected = false
+            selectedCell.updateLayout()
         }
+        self.selectedCells.removeAll()
         
-        if (selectedRow > -1) {
-            let cell = self.tableView.view(atColumn: 0, row: selectedRow, makeIfNecessary: true) as! shotTableCell
-            
-            
-            self.selectedCell = cell
         
+        for (_, index) in self.tableView.selectedRowIndexes.enumerated(){
+            
+            let cell = self.tableView.view(atColumn: 0, row: index, makeIfNecessary: true) as! shotTableCell
             cell.isSelected = true
             cell.updateLayout()
+            self.selectedCells.append(cell)
+            
         }
+       
+    
             
     }
     func tableView(_ tableView: NSTableView, shouldSelectRow row: Int) -> Bool {
-        
+    
         return true
     }
+    
     
     
     
@@ -413,16 +421,25 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
             // do paste event
             self.fs.pasteFromClipboard()
         }
-        if event.keyCode == 51 && self.selectedCell != nil{
-            //print("delete cell now")
+        if event.keyCode == 51 && self.selectedCells.count > 0{
             
-            if let shot = self.selectedCell.shot{
-                shot.delete()
+            
+            for cell in self.selectedCells{
+                let shot = cell.shot
+                shot?.delete()
+                
+            
             }
+            
+            self.selectedCells.removeAll()
+    
+            
+            
         }
     }
     
     
+   
     override func flagsChanged(with event: NSEvent) {
         
         let flagEvent = event.modifierFlags.intersection(NSEvent.ModifierFlags.deviceIndependentFlagsMask)
