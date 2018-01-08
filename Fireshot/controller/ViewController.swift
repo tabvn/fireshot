@@ -19,6 +19,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     let viewHeight: CGFloat = 250
     
     var selected: Shot! = nil
+    var selectedCell: shotTableCell! = nil
     var commandKeyPressed: Bool = false
     
     // Menu options for select shot/copy/delete  ...
@@ -364,10 +365,35 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         fs.mainTable = nil
     }
     
+    func tableViewSelectionDidChange(_ notification: Notification) {
+        
+        let selectedRow = self.tableView.selectedRow
+        
+        // If the user selected a row. (When no row is selected, the index is -1)
+        if self.selectedCell != nil{
+            
+            self.selectedCell.isSelected = false
+            self.selectedCell.updateLayout()
+            self.selectedCell = nil
+        }
+        
+        if (selectedRow > -1) {
+            let cell = self.tableView.view(atColumn: 0, row: selectedRow, makeIfNecessary: true) as! shotTableCell
+            
+            
+            self.selectedCell = cell
+        
+            cell.isSelected = true
+            cell.updateLayout()
+        }
+            
+    }
     func tableView(_ tableView: NSTableView, shouldSelectRow row: Int) -> Bool {
         
-        return false
+        return true
     }
+    
+    
     
     override func keyDown(with event: NSEvent) {
         
@@ -378,7 +404,16 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
             // do paste event
             self.fs.pasteFromClipboard()
         }
+        if event.keyCode == 51 && self.selectedCell != nil{
+            //print("delete cell now")
+            
+            if let shot = self.selectedCell.shot{
+                shot.delete()
+            }
+        }
     }
+    
+    
     override func flagsChanged(with event: NSEvent) {
         
         let flagEvent = event.modifierFlags.intersection(NSEvent.ModifierFlags.deviceIndependentFlagsMask)
@@ -393,6 +428,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
             self.commandKeyPressed = false
         }
     }
+    
     
     
     

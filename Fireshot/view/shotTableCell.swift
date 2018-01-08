@@ -12,7 +12,12 @@ class shotTableCell: NSTableCellView {
 
     var shot: Shot! = nil
     var viewVC: ViewController! = nil
-
+    
+    var isSelected: Bool = false
+    
+    let titleColor: NSColor = NSColor(red: 0, green: 0, blue: 0, alpha: 0.6)
+    let subTitleColor: NSColor = NSColor(red: 0, green: 0, blue: 0, alpha: 0.3)
+    
     let cellView: NSView = {
         let v = NSView()
         v.wantsLayer = true
@@ -40,29 +45,29 @@ class shotTableCell: NSTableCellView {
     lazy var titleLabel: NSTextField = {
         
        
-        let button = NSTextField()
+        let label = NSTextField()
         
-        button.translatesAutoresizingMaskIntoConstraints = false
+        label.translatesAutoresizingMaskIntoConstraints = false
         
         
-        button.isBordered = false
-        button.wantsLayer = true
-        button.backgroundColor = NSColor.clear
+        label.isBordered = false
+        label.wantsLayer = true
+        label.backgroundColor = NSColor.clear
+        label.textColor = self.titleColor
+        label.alignment = .left
+        label.font = NSFont.systemFont(ofSize: 12)
         
-        button.alignment = .left
-        button.font = NSFont.systemFont(ofSize: 12)
-        
-        return button
+        return label
     }()
     
-    let dateTimeLabel: NSTextField = {
+    lazy var dateTimeLabel: NSTextField = {
         
         
         let label = NSTextField(labelWithString: "")
         
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = NSFont.systemFont(ofSize: 10)
-        label.textColor = NSColor(red: 0, green: 0, blue: 0, alpha: 0.5)
+        label.textColor = self.subTitleColor
         
         
         return label
@@ -134,10 +139,22 @@ class shotTableCell: NSTableCellView {
         titleLabel.stringValue = shot.title //timestamp.getDateTimeString()
         
         
+        
     }
-    
-    
-    
+
+    func updateLayout(){
+        
+        if self.isSelected{
+            
+            titleLabel.textColor = NSColor.white
+            dateTimeLabel.textColor = NSColor.white
+            
+        }else{
+            
+            titleLabel.textColor = titleColor
+            dateTimeLabel.textColor = subTitleColor
+        }
+    }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -149,5 +166,7 @@ class shotTableCell: NSTableCellView {
        
         
     }
+    
+    
     
 }
