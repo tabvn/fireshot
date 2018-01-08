@@ -40,7 +40,7 @@ https://www.youtube.com/watch?v=ULagU2U8mJQ
 
 ## Screenshot
 
-<img src="https://raw.githubusercontent.com/tabvn/fireshot/master/screens.png" />
+<img src="https://github.com/tabvn/fireshot/blob/master/screenshot.png" />
 
 ## App Features
 
