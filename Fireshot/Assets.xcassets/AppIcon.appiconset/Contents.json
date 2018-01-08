@@ -3,55 +3,55 @@
     {
       "size" : "16x16",
       "idiom" : "mac",
-      "filename" : "cloud_16x16.png",
+      "filename" : "cloud_16.png",
       "scale" : "1x"
     },
     {
       "size" : "16x16",
       "idiom" : "mac",
-      "filename" : "cloud_16x16@2x.png",
+      "filename" : "cloud_32-1.png",
       "scale" : "2x"
     },
     {
       "size" : "32x32",
       "idiom" : "mac",
-      "filename" : "cloud-thin-outline (3).png",
+      "filename" : "cloud_32.png",
       "scale" : "1x"
     },
     {
       "size" : "32x32",
       "idiom" : "mac",
-      "filename" : "cloud-thin-outline copy.png",
+      "filename" : "cloud_64.png",
       "scale" : "2x"
     },
     {
       "size" : "128x128",
       "idiom" : "mac",
-      "filename" : "cloud-thin-outline (2)-1.png",
+      "filename" : "cloud_128.png",
       "scale" : "1x"
     },
     {
       "size" : "128x128",
       "idiom" : "mac",
-      "filename" : "cloud-thin-outline (1)-1.png",
+      "filename" : "cloud_256-1.png",
       "scale" : "2x"
     },
     {
       "size" : "256x256",
       "idiom" : "mac",
-      "filename" : "cloud-thin-outline (1).png",
+      "filename" : "cloud_256.png",
       "scale" : "1x"
     },
     {
       "size" : "256x256",
       "idiom" : "mac",
-      "filename" : "cloud-thin-outline-1.png",
+      "filename" : "cloud_512-1.png",
       "scale" : "2x"
     },
     {
       "size" : "512x512",
       "idiom" : "mac",
-      "filename" : "cloud_512x512.png",
+      "filename" : "cloud_512.png",
       "scale" : "1x"
     },
     {
