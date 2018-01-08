@@ -379,14 +379,14 @@ class Fireshot {
             let shot = Shot(title: title , file: file, type: type, url: url, uid: userId, id: id, timestamp: timestamp)
 
             
-            self.shots.insert(shot, at: 0)
+           
             
        
             if self.mainTable != nil {
                 
                 
                 DispatchQueue.main.async {
-                    
+                     self.shots.insert(shot, at: 0)
                     let indexSet:IndexSet = NSIndexSet(index: 0) as IndexSet
                     self.mainTable.insertRows(at: indexSet, withAnimation: NSTableView.AnimationOptions.slideDown)
                     

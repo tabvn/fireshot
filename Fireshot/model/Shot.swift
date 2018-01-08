@@ -15,7 +15,7 @@ class Shot{
     
     private var ref: DatabaseReference!
     let id: String!
-    let title: String!
+    var title: String!
     var file:String!
     var url:String!
     let uid: String!

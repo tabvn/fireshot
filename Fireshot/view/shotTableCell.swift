@@ -8,7 +8,7 @@
 
 import Cocoa
 
-class shotTableCell: NSTableCellView {
+class shotTableCell: NSTableCellView, NSTextFieldDelegate{
 
     var shot: Shot! = nil
     var viewVC: ViewController! = nil
@@ -57,6 +57,7 @@ class shotTableCell: NSTableCellView {
         label.alignment = .left
         label.font = NSFont.systemFont(ofSize: 12)
         
+        
         return label
     }()
     
@@ -80,7 +81,7 @@ class shotTableCell: NSTableCellView {
         
     }
 
-
+    
     override init(frame frameRect: NSRect) {
        
         super.init(frame: frameRect)
@@ -88,6 +89,8 @@ class shotTableCell: NSTableCellView {
         self.addSubview(cellView)
         self.addSubview(titleLabel)
         self.wantsLayer = true
+        
+        titleLabel.delegate = self
         
         cellView.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true
         cellView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 0).isActive = true
@@ -122,7 +125,17 @@ class shotTableCell: NSTableCellView {
         
     }
     
-    
+    override func controlTextDidEndEditing(_ obj: Notification) {
+        
+        if let textField = obj.object as? NSTextField{
+            if let textValue: String? = textField.stringValue{
+                
+                self.shot.title = textValue
+                shot.save()
+            }
+        }
+        
+    }
     
     func setShot(shot: Shot){
         

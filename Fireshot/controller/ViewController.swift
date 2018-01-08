@@ -363,9 +363,11 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         
         let shots = fs.getShots()
         
-        let shot: Shot = shots[row]
+        if  let shot: Shot = shots[row]{
+            tableCellView.setShot(shot: shot)
+        }
         
-        tableCellView.setShot(shot: shot)
+        
         
         tableCellView.viewVC = self
         
