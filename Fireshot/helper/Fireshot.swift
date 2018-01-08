@@ -63,9 +63,12 @@ class Fireshot {
     
     func startScreenRecording(){
         
-       
+        //NSURL *tmpDirURL = [NSURL fileURLWithPath:NSTemporaryDirectory()];
+        //NSURL *fileURL = [[tmpDirURL URLByAppendingPathComponent:@"hello"] URLByAppendingPathExtension:@"txt"];
+        
         
         self.changeMenuImage(imageName: "recording")
+       
         let tmpDir = NSTemporaryDirectory()
         
         let timestamp = NSDate().timeIntervalSince1970
@@ -77,32 +80,71 @@ class Fireshot {
     }
     func stopScreenRecoding() -> URL?{
         
+       
+      
         if let recoder = self.recoder{
+            self.recoder?.stop()
+              self.changeMenuImage(imageName: "cloud_upload")
+            let deadline = DispatchTime.now() + 3
+            
+            guard let userId = self.getCurrentUserId() else {
+                return nil
+                
+            }
             
             let url: URL = recoder.destinationUrl as URL
-            
-            self.changeMenuImage(imageName: "cloud_upload")
-            
-            print(url)
-            
-            let timestamp = NSDate().timeIntervalSince1970
-            let filename = "recording_\(timestamp).mp4"
-            
-            self.storageUploadFileUrl(filename: filename, url: url, meta: nil, complete: { (file, error) in
+            DispatchQueue.main.asyncAfter(deadline: deadline, execute: {
                 
-                print("video upload", file, error)
-                if let _ = error {
+               
+                
+               
+                
+              
+                
+                
+                let timestamp = NSDate().timeIntervalSince1970
+                let filename = "recording_\(timestamp).mp4"
+                
+                
+                
+                
+                
+                
+                self.storageUploadFileUrl(filename: filename, url: url, meta: nil, complete: { (fileData, error) in
                     
-                    return
-                }
-                guard let downloadUrl = file?.downloadURL()?.absoluteString, let type = file?.contentType, let userId = self.getCurrentUserId() else {
-                    return
-                }
+                    if error != nil{
+                        
+                        self.changeMenuImage(imageName: "cloud_error")
+                        return
+                    }
+                    
+                    let fileManager = FileManager()
+                    do {
+                        try fileManager.removeItem(at: url)
+                        
+                    }
+                    catch{
+                        print("An error removing the file", url)
+                    }
+                    guard let videoUrl = fileData?.downloadURL()?.absoluteString else{
+                        self.changeMenuImage(imageName: "cloud_error")
+                        return
+                    }
+                    
+                    self.copyToClipboard(text: videoUrl)
+                    self.showNotification(title: "Fireshot Screen recording saved", text: "Screen recording has been saved.", image: nil)
+                    
+                    self.changeMenuImage(imageName: "cloud")
+                    let shot: Shot = Shot(title: "Screen recording.mp4", file: filename, type: "video/mp4", url: videoUrl, uid: userId, id: nil, timestamp: nil)
+                    shot.save()
+                    
+                    
+                    
+                    
+                })
                 
-                
-                let shot: Shot = Shot(title: "Screen recording.mp4", file: filename, type: type, url: downloadUrl, uid: userId, id: nil, timestamp: nil)
-                shot.save()
             })
+            
             
             self.recoder = nil
             return url

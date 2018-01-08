@@ -61,7 +61,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     @objc func recordingScreen(){
         
         
-        self.tooglePopover()
+        self.fs.tooglePopover()
         
         let deadline = DispatchTime.now() + 3
         DispatchQueue.main.asyncAfter(deadline: deadline) {
