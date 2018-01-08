@@ -20,6 +20,7 @@ class Fireshot {
     private var menuButton: NSButton!
     private var popover: NSPopover!
     private var activeVC: NSViewController!
+    private var connected: Bool = false
 
     let expectedExt = ["jpg", "jpeg", "JPG", "png", "txt", "doc", "docx", "html", "pdf", "xls", "xlsx", "json", "zip", "gz", "tar.gz", "plist", "js", "ico", "psd", "csv"]
     
@@ -317,7 +318,23 @@ class Fireshot {
         
     }
     func onShotAdded(){
-
+        
+        // offline detection
+        let connectedRef = Database.database().reference(withPath: ".info/connected")
+        connectedRef.observe(.value, with: { snapshot in
+            if let connected = snapshot.value as? Bool, connected {
+                // connected
+                self.connected = true
+                self.changeMenuImage(imageName: "cloud")
+            } else {
+                self.connected = false
+                self.changeMenuImage(imageName: "cloud_disconnect")
+                
+            }
+        })
+        
+        
+        
         guard let _ = self.getCurrentUser() else {
             return
         }
